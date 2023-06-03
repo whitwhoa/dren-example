@@ -1,0 +1,35 @@
+{
+    "name": "whitwhoa/drencrom-test",
+    "description": "Test suite for DrencromPHP framework",
+    "license": "MIT",
+    "type": "project",
+	"repositories": [
+		{
+			"type": "path",
+			"url": "/development/drencrom"
+		}
+	],
+    "require": {
+        "php": ">=8.1.0",
+		"whitwhoa/drencrom": "@dev"
+    },
+    "require-dev": {},
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        },
+        "files":[]
+    },
+    "autoload-dev": {
+        "psr-4": {}
+    },
+    "extra": {},
+    "scripts": {},
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "optimize-autoloader": true
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true
+}
