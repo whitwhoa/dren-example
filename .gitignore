@@ -1,2 +1,5 @@
-/vendor
-/cache/routes.php
+vendor
+cache/routes.php
+.idea
+storage/sessions/*
+!storage/sessions/.gitkeep
