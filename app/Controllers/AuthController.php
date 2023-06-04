@@ -3,14 +3,13 @@
 
 namespace App\Controllers;
 
-use Dren\App;
-
 
 use App\Model\Services\UserService;
+use Dren\Controller;
 use Dren\Response;
 
 
-class AuthController
+class AuthController extends Controller
 {
 
     /**
@@ -20,7 +19,7 @@ class AuthController
      */
     public function register() : Response
     {
-        return (new Response())->html(App::$vc->compile('auth.register'));
+        return (new Response())->html($this->viewCompiler->compile('auth.register'));
     }
 
 
@@ -32,7 +31,7 @@ class AuthController
      */
     public function registerSave() : Response
     {
-        UserService::createNewUser(App::$request->getPostData());
+        UserService::createNewUser($this->request->getPostData());
         return (new Response())->redirect('/');
     }
 
@@ -45,7 +44,7 @@ class AuthController
      */
     public function login() : Response
     {
-        return (new Response())->html(App::$vc->compile('auth.login'));
+        return (new Response())->html($this->viewCompiler->compile('auth.login'));
     }
 
 
@@ -57,7 +56,7 @@ class AuthController
      */
     public function loginSave() : Response
     {
-        UserService::login(App::$request->getPostData()->email);
+        UserService::login($this->request->getPostData()->email);
         return (new Response())->redirect('/');
     }
 
@@ -69,7 +68,7 @@ class AuthController
      */
     public function logout() : Response
     {
-        App::$sm->regenerate();
+        $this->sessionManager->regenerate();
         return (new Response())->redirect('/');
     }
 

@@ -3,11 +3,11 @@
 namespace App\Middleware;
 
 
-use Dren\App;
+use Dren\Middleware;
 use Dren\Response;
 
 
-class UserLoggedIn
+class UserLoggedIn extends Middleware
 {
 
     /**
@@ -17,15 +17,12 @@ class UserLoggedIn
      *
      * If no value returned, this middleware has passed
      *
-     * @return mixed
      */
     public function handle()
     {
-        // User is logged in so we need to return a redirect response
-        if(!App::$sm->getUserId()){
+        // User is logged in, so we need to return a redirect response
+        if(!$this->sessionManager->getUserId())
             return (new Response())->redirect('/');
-        }
-
     }
 
 }

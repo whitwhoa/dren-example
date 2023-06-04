@@ -6,11 +6,11 @@ namespace App\Controllers;
 
 
 use App\Model\Entities\User;
+use Dren\Controller;
 use Dren\Response;
-use Dren\App;
 
 
-class HomeController
+class HomeController extends Controller
 {
 
     /**
@@ -22,11 +22,13 @@ class HomeController
     {
         // Return html response
         $user = null;
-        if(App::$sm->getUserId()){
+        if($this->sessionManager->getUserId())
+        {
             $user = new User();
-            $user->find(App::$sm->getUserId());
+            $user->find($this->sessionManager->getUserId());
         }
-        return (new Response())->html(App::$vc->compile('welcome', [
+
+        return (new Response())->html($this->viewCompiler->compile('welcome', [
             'user' => $user
         ]));
     }
