@@ -11,6 +11,16 @@
             <h2>Login</h2>
             <hr/>
 
+            <?php if(isset($errors->authentication_failure)): ?>
+            <div class="row">
+                <div class="col">
+                    <div class="alert alert-danger">
+                        <?php echo $errors->authentication_failure[0]; ?>
+                    </div>
+                </div>
+            </div>
+            <?php endif; ?>
+
             <div class="row">
                 <div class="col">
                     <div class="form-group">

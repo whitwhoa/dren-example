@@ -1,3 +1,9 @@
+<?php
+//echo $errors->confirmPassword;
+//die;
+
+?>
+
 <?php $view_extends = 'master'; ?>
 <?php $view_title = 'Register'; ?>
 
@@ -87,6 +93,8 @@
     </div>
 
 </form>
+
+
 
 <?php $view_body_content = end_section(); ?>
 
