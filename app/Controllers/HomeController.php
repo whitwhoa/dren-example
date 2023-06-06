@@ -33,6 +33,21 @@ class HomeController extends Controller
         ]));
     }
 
+    public function arrayElementForm() : Response
+    {
+        // Return html response
+        $user = null;
+        if($this->sessionManager->getUserId())
+        {
+            $user = new User();
+            $user->find($this->sessionManager->getUserId());
+
+        }
+
+        return (new Response())->html($this->viewCompiler->compile('welcome', [
+            'user' => $user
+        ]));
+    }
 
 
 }

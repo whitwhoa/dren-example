@@ -13,10 +13,16 @@
             <br/>
             <br/>
             <?php if(!$user): ?>
+                <div class="alert alert-warning text-center">Login to see additional examples</div>
                 <a href="/auth/register" class="btn btn-primary w-100">Register</a><br/>
                 <a href="/auth/login" class="btn btn-primary w-100 mt-2">Login</a>
             <?php else: ?>
                 <a href="/auth/logout" class="btn btn-primary w-100">Logout</a>
+                <br/>
+                <h2 class="mt-5 mb-3">Additional Usage Examples</h2>
+                <ol>
+                   <li><a href="/form-array-element-example">Submitting and validating a form with array parameters</a> </li>
+                </ol>
             <?php endif; ?>
 
         </div>

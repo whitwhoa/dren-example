@@ -6,4 +6,5 @@
 
 return [
     ['/', 'HomeController@welcome'],
+    ['/form-array-element-example', 'HomeController@arrayElementForm', ['UserLoggedIn']]
 ];

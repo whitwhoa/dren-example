@@ -4,7 +4,7 @@
 namespace App\Controllers;
 
 
-use App\Model\Entities\User;
+use App\Model\DAO\UserDAO;
 use App\Model\Services\UserService;
 use Dren\Controller;
 use Dren\Response;
@@ -58,7 +58,7 @@ class AuthController extends Controller
      */
     public function loginSave() : Response
     {
-        $u = User::findByEmail($this->request->getPostData()->email);
+        $u = (new UserDAO())->findByEmail($this->request->getPostData()->email);
         $this->sessionManager->regenerate(true, $u->id);
 
         return (new Response())->redirect('/');
