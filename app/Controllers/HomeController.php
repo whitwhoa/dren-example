@@ -5,17 +5,27 @@ namespace App\Controllers;
 
 
 
-use App\Model\Entities\User;
+use App\Model\DAOs\UserDAO;
+
 use Dren\Controller;
 use Dren\Response;
+use Exception;
 
 
 class HomeController extends Controller
 {
+    private UserDAO $userDAO;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->userDAO = new UserDAO();
+    }
 
     /**
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      *
      */
     public function welcome() : Response
@@ -23,30 +33,31 @@ class HomeController extends Controller
         // Return html response
         $user = null;
         if($this->sessionManager->getUserId())
-        {
-            $user = new User();
-            $user->find($this->sessionManager->getUserId());
-        }
+            $user = $this->userDAO->getUserById($this->sessionManager->getUserId());
 
-        return (new Response())->html($this->viewCompiler->compile('welcome', [
+
+        return $this->response->html($this->viewCompiler->compile('welcome', [
             'user' => $user
         ]));
     }
 
     public function arrayElementForm() : Response
     {
-        // Return html response
-        $user = null;
-        if($this->sessionManager->getUserId())
-        {
-            $user = new User();
-            $user->find($this->sessionManager->getUserId());
+        // TODO: Left off here, need to finish building out this example
 
-        }
+        //dad($this->userDAO->getKeyValsWithNotes($this->sessionManager->getUserId()));
+        //dad(json_decode($this->userDAO->getKeyValsWithNotes($this->sessionManager->getUserId())[0]->notes)[0]->note);
 
-        return (new Response())->html($this->viewCompiler->compile('welcome', [
-            'user' => $user
+        return $this->response->html($this->viewCompiler->compile('form-array-element-example', [
+            'user' => $this->userDAO->getUserById($this->sessionManager->getUserId()),
+            'userKeyVals' => $this->userDAO->getKeyValsWithNotes($this->sessionManager->getUserId())
         ]));
+    }
+
+    public function arrayElementFormSave() : Response
+    {
+        dad('YEET005');
+        //dad($this->request->getPostData());
     }
 
 

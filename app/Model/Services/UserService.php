@@ -4,29 +4,30 @@
 namespace App\Model\Services;
 
 
-use App\Model\Entities\User;
-use Dren\App;
+use App\Model\DAOs\UserDAO;
+use Dren\Service;
 
 
-class UserService
+class UserService extends Service
 {
+    private UserDAO $userDAO;
 
-    /**
-     *
-     *
-     * @param object $params
-     * @throws \Exception
-     */
-    public static function createNewUser(object $params) : ?int
+
+    public function __construct()
     {
-        $u = new User();
-        $u->first_name = $params->firstName;
-        $u->last_name = $params->lastName;
-        $u->email = $params->email;
-        $u->password = password_hash($params->password, PASSWORD_DEFAULT);
-        $u->save();
+        parent::__construct();
 
-        return $u->id;
+        $this->userDAO = new UserDAO();
+    }
+
+    public function createNewUser(object $params) : ?int
+    {
+        return $this->userDAO->createNewUser([
+            $params->firstName,
+            $params->lastName,
+            $params->email,
+            password_hash($params->password, PASSWORD_DEFAULT)
+        ]);
     }
 
 }

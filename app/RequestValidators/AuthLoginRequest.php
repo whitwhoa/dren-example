@@ -4,15 +4,25 @@
 namespace App\RequestValidators;
 
 
-use App\Model\Entities\User;
+
+use App\Model\DAOs\UserDAO;
+use Dren\Request;
 use Dren\RequestValidator;
 
 
 
 class AuthLoginRequest extends RequestValidator
 {
+    private UserDAO $userDAO;
 
     protected string $failureResponseType = 'redirect'; // or json
+
+    public function __construct(Request $r)
+    {
+        parent::__construct($r);
+
+        $this->userDAO = new UserDAO();
+    }
 
     public function setRules(): void
     {
@@ -33,7 +43,7 @@ class AuthLoginRequest extends RequestValidator
 //                    return;
 //                }
 
-                $u = User::findByEmail($requestData['email']);
+                $u = $this->userDAO->getUserByEmail($requestData['email']);
 
                 if(!$u)
                 {
@@ -53,35 +63,6 @@ class AuthLoginRequest extends RequestValidator
         $this->messages = [
             'email.required' => "Custom message for email required validation failure"
         ];
-    }
-
-    /**
-     * Set valitron rules where $this->valitron is an instance of new Valitron\Validator()
-     */
-    public function rules() : void
-    {
-
-        $v = $this->valitron;
-        $v->rule('required', ['email', 'password']);
-        $v->rule('email', 'email');
-
-        // Verify that the given email exists and that the given password is associated with the account
-        $v->rule(function($field, $value, $params, $fields){
-
-            if(!User::emailExists($value)){
-                return false;
-            }
-
-            $u = User::findByEmail($value);
-
-            if(!password_verify($fields['password'], $u->password)){
-                return false;
-            }
-
-            return true;
-
-        }, "email")->message('Provided credentials are incorrect');
-
     }
 
 }

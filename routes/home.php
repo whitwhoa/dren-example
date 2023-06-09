@@ -6,5 +6,6 @@
 
 return [
     ['/', 'HomeController@welcome'],
-    ['/form-array-element-example', 'HomeController@arrayElementForm', ['UserLoggedIn']]
+    ['/form-array-element-example', 'HomeController@arrayElementForm', ['UserLoggedIn']],
+    ['/form-array-element-example/save', 'HomeController@arrayElementFormSave', ['UserLoggedIn'], 'KeyValueSaveRequest']
 ];

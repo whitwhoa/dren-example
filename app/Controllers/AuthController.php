@@ -4,23 +4,34 @@
 namespace App\Controllers;
 
 
-use App\Model\DAO\UserDAO;
+use App\Model\DAOs\UserDAO;
 use App\Model\Services\UserService;
 use Dren\Controller;
 use Dren\Response;
+use Exception;
 
 
 class AuthController extends Controller
 {
+    private UserDAO $userDAO;
+    private UserService $userService;
+
+    public function __construct()
+    {
+        parent::__construct();
+
+        $this->userDAO = new UserDAO();
+        $this->userService = new UserService();
+    }
 
     /**
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      *
      */
     public function register() : Response
     {
-        return (new Response())->html($this->viewCompiler->compile('auth.register'));
+        return $this->response->html($this->viewCompiler->compile('auth.register'));
     }
 
 
@@ -28,13 +39,13 @@ class AuthController extends Controller
      *
      *
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function registerSave() : Response
     {
-        $uid = UserService::createNewUser($this->request->getPostData());
+        $uid = $this->userService->createNewUser($this->request->getPostData());
         $this->sessionManager->regenerate(true, $uid);
-        return (new Response())->redirect('/');
+        return $this->response->redirect('/');
     }
 
 
@@ -42,11 +53,11 @@ class AuthController extends Controller
      *
      *
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function login() : Response
     {
-        return (new Response())->html($this->viewCompiler->compile('auth.login'));
+        return $this->response->html($this->viewCompiler->compile('auth.login'));
     }
 
 
@@ -54,26 +65,26 @@ class AuthController extends Controller
      *
      *
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function loginSave() : Response
     {
-        $u = (new UserDAO())->findByEmail($this->request->getPostData()->email);
+        $u = $this->userDAO->getUserByEmail($this->request->getPostData()->email);
         $this->sessionManager->regenerate(true, $u->id);
 
-        return (new Response())->redirect('/');
+        return $this->response->redirect('/');
     }
 
     /**
      *
      *
      * @return Response
-     * @throws \Exception
+     * @throws Exception
      */
     public function logout() : Response
     {
         $this->sessionManager->regenerate();
-        return (new Response())->redirect('/');
+        return $this->response->redirect('/');
     }
 
 }
