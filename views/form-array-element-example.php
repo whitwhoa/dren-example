@@ -14,14 +14,16 @@
             </div>
 
             <?php if(isset($errors)): ?>
+            <pre>
             <?php echo var_export($errors, true); ?>
+                </pre>
             <?php endif; ?>
 
             <div class="text-right">
                 <button class="btn btn-primary" id="addKeyValButton">Add Key Value Pair</button>
             </div>
             <form action="/form-array-element-example/save" method="POST" id="keyValuePairForm">
-
+<!--                <input type="text" class="form-control" name="testElement"/>-->
 
                 <button type="submit" class="btn btn-primary mb-2 d-none" id="keyValuePairFormSubmitButton">Save</button>
             </form>
