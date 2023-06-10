@@ -20,22 +20,22 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <input type="text" class="form-control<?php echo isset($errors->firstName) ? ' is-invalid' : '' ?>" id="firstName" name="firstName" placeholder="First name"
+                        <input type="text" class="form-control<?php echo $errors->has('firstName') ? ' is-invalid' : '' ?>" id="firstName" name="firstName" placeholder="First name"
                                aria-label="First name" value="<?php echo isset($old->firstName) ? $old->firstName : ''; ?>">
-                        <?php if(isset($errors->firstName)): ?>
+                        <?php if($errors->has('firstName')): ?>
                             <div class="invalid-feedback">
-                                <strong><?php echo $errors->firstName[0]; ?></strong>
+                                <strong><?php echo $errors->first('firstName'); ?></strong>
                             </div>
                         <?php endif;?>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <input type="text" class="form-control<?php echo isset($errors->lastName) ? ' is-invalid' : '' ?>" id="lastName" name="lastName" placeholder="Last name"
+                        <input type="text" class="form-control<?php echo $errors->has('lastName') ? ' is-invalid' : '' ?>" id="lastName" name="lastName" placeholder="Last name"
                                aria-label="Last name" value="<?php echo isset($old->lastName) ? $old->lastName : ''; ?>">
-                        <?php if(isset($errors->lastName)): ?>
+                        <?php if($errors->has('lastName')): ?>
                             <div class="invalid-feedback">
-                                <strong><?php echo $errors->lastName[0]; ?></strong>
+                                <strong><?php echo $errors->first('lastName'); ?></strong>
                             </div>
                         <?php endif;?>
                     </div>
@@ -45,11 +45,11 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <input type="text" class="form-control<?php echo isset($errors->email) ? ' is-invalid' : '' ?>" id="email" name="email" placeholder="Email"
+                        <input type="text" class="form-control<?php echo $errors->has('email') ? ' is-invalid' : '' ?>" id="email" name="email" placeholder="Email"
                                aria-label="Email" value="<?php echo isset($old->email) ? $old->email : ''; ?>">
-                        <?php if(isset($errors->email)): ?>
+                        <?php if($errors->has('email')): ?>
                             <div class="invalid-feedback">
-                                <strong><?php echo $errors->email[0]; ?></strong>
+                                <strong><?php echo $errors->first('email'); ?></strong>
                             </div>
                         <?php endif;?>
                     </div>
@@ -59,22 +59,22 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <input type="password" class="form-control<?php echo isset($errors->password) ? ' is-invalid' : '' ?>" id="password" name="password" placeholder="Password"
+                        <input type="password" class="form-control<?php echo $errors->has('password') ? ' is-invalid' : '' ?>" id="password" name="password" placeholder="Password"
                                aria-label="Password" value="">
-                        <?php if(isset($errors->password)): ?>
+                        <?php if($errors->has('password')): ?>
                             <div class="invalid-feedback">
-                                <strong><?php echo $errors->password[0]; ?></strong>
+                                <strong><?php echo $errors->first('password'); ?></strong>
                             </div>
                         <?php endif;?>
                     </div>
                 </div>
                 <div class="col">
                     <div class="form-group">
-                        <input type="password" class="form-control<?php echo isset($errors->confirmPassword) ? ' is-invalid' : '' ?>" id="confirmPassword" name="confirmPassword"
+                        <input type="password" class="form-control<?php echo $errors->has('confirmPassword') ? ' is-invalid' : '' ?>" id="confirmPassword" name="confirmPassword"
                                placeholder="Confirm Password" aria-label="Confirm Password" value="">
-                        <?php if(isset($errors->confirmPassword)): ?>
+                        <?php if($errors->has('confirmPassword')): ?>
                             <div class="invalid-feedback">
-                                <strong><?php echo $errors->confirmPassword[0]; ?></strong>
+                                <strong><?php echo $errors->first('confirmPassword'); ?></strong>
                             </div>
                         <?php endif;?>
                     </div>

@@ -11,11 +11,11 @@
             <h2>Login</h2>
             <hr/>
 
-            <?php if(isset($errors->authentication_failure)): ?>
+            <?php if($errors->has('authentication_failure')): ?>
             <div class="row">
                 <div class="col">
                     <div class="alert alert-danger">
-                        <?php echo $errors->authentication_failure[0]; ?>
+                        <?php echo $errors->first('authentication_failure'); ?>
                     </div>
                 </div>
             </div>
@@ -24,11 +24,11 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <input type="text" class="form-control<?php echo isset($errors->email) ? ' is-invalid' : '' ?>" id="email" name="email" placeholder="Email"
+                        <input type="text" class="form-control<?php echo $errors->has('email') ? ' is-invalid' : '' ?>" id="email" name="email" placeholder="Email"
                                aria-label="Email" value="<?php echo isset($old->email) ? $old->email : ''; ?>">
-                        <?php if(isset($errors->email)): ?>
+                        <?php if($errors->has('email')): ?>
                             <div class="invalid-feedback">
-                                <strong><?php echo $errors->email[0]; ?></strong>
+                                <strong><?php echo $errors->first('email'); ?></strong>
                             </div>
                         <?php endif;?>
                     </div>
@@ -38,11 +38,11 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
-                        <input type="password" class="form-control<?php echo isset($errors->password) ? ' is-invalid' : '' ?>" id="password" name="password" placeholder="Password"
+                        <input type="password" class="form-control<?php echo $errors->has('password') ? ' is-invalid' : '' ?>" id="password" name="password" placeholder="Password"
                                aria-label="Password" value="">
-                        <?php if(isset($errors->password)): ?>
+                        <?php if($errors->has('password')): ?>
                             <div class="invalid-feedback">
-                                <strong><?php echo $errors->password[0]; ?></strong>
+                                <strong><?php echo $errors->first('password'); ?></strong>
                             </div>
                         <?php endif;?>
                     </div>

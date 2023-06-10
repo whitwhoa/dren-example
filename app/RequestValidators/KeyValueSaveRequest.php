@@ -47,14 +47,12 @@ class KeyValueSaveRequest extends RequestValidator
      * */
     public function setRules(): void
     {
-        //dad($this->request);
         $this->rules = [
-            //'testElement' => 'required',
             'keyValPair' => 'required|#is_array|#min_array_elements:1',
             'keyValPair.*.key' => 'required',
             'keyValPair.*.value' => 'required',
             'keyValPair.*.notes' => '#is_array',
-            'keyValPair.*.notes.*' => 'max_char:5'
+            'keyValPair.*.notes.*' => 'max_char:100'
         ];
 
         $this->messages = [
