@@ -10,7 +10,6 @@ error_reporting(E_ALL);
 //$start = microtime(true);
 
 
-
 /* Set $privateDirectory equal to the path where you have installed the drencrom/private
  * directory. This path can be anywhere as long as the webserver has correct permissions.
  * Do not put this inside your public webserver directory for security reasons.

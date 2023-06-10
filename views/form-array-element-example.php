@@ -13,10 +13,18 @@
                 </p>
             </div>
 
-            <?php if(isset($errors)): ?>
-            <pre>
-            <?php echo var_export($errors, true); ?>
-                </pre>
+            <?php if(isset($errors) && $errors->count() > 0): ?>
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-danger">
+                            <ul>
+                            <?php foreach($errors->all() as $e): ?>
+                                <li><?php echo $e; ?></li>
+                            <?php endforeach; ?>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
             <?php endif; ?>
 
             <div class="text-right">
