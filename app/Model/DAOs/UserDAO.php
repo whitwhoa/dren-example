@@ -79,5 +79,16 @@ class UserDAO extends DAO
             ->exec();
     }
 
+    public function setKeyValsWithNotes(int $userId, array $keyVals) : void
+    {
+        foreach($keyVals as $kv)
+        {
+            $newKvId = $this->db->query("INSERT INTO key_vals(`user_id`, `key`, `val`) VALUES (?,?,?)", [$userId, $kv['key'], $kv['value']])->exec();
+            if(array_key_exists('notes', $kv))
+                foreach($kv['notes'] as $n)
+                    $this->db->query("INSERT INTO key_val_notes(key_val_id, note) VALUES(?,?)", [$newKvId, $n])->exec();
+        }
+    }
+
 
 }

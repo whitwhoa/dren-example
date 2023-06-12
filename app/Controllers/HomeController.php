@@ -43,11 +43,6 @@ class HomeController extends Controller
 
     public function arrayElementForm() : Response
     {
-        // TODO: Left off here, need to finish building out this example
-
-        //dad($this->userDAO->getKeyValsWithNotes($this->sessionManager->getUserId()));
-        //dad(json_decode($this->userDAO->getKeyValsWithNotes($this->sessionManager->getUserId())[0]->notes)[0]->note);
-
         return $this->response->html($this->viewCompiler->compile('form-array-element-example', [
             'user' => $this->userDAO->getUserById($this->sessionManager->getUserId()),
             'userKeyVals' => $this->userDAO->getKeyValsWithNotes($this->sessionManager->getUserId())
@@ -56,9 +51,13 @@ class HomeController extends Controller
 
     public function arrayElementFormSave() : Response
     {
-        dad('YEET005');
-        //dad($this->request->getPostData());
+        $this->userDAO->setKeyValsWithNotes($this->sessionManager->getUserId(), $this->request->getPostData()->keyValPair);
+        return $this->response->redirect($this->request->getReferrer());
     }
 
+    public function routeParameterExample() : Response
+    {
+        return $this->response->html($this->request->getRouteParam('id'));
+    }
 
 }

@@ -19,5 +19,6 @@ return (object)[
             'db'    => 'drencrom_test'
         ]
     ],
-    'display_errors' => true,
+    'display_errors' => true, // TODO: not sure this is used anywhere ???
+    'cache_routes' => false
 ];
