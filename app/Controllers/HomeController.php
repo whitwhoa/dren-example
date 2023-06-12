@@ -7,6 +7,7 @@ namespace App\Controllers;
 
 use App\Model\DAOs\UserDAO;
 
+use Dren\App;
 use Dren\Controller;
 use Dren\Response;
 use Exception;
@@ -23,18 +24,12 @@ class HomeController extends Controller
         $this->userDAO = new UserDAO();
     }
 
-    /**
-     * @return Response
-     * @throws Exception
-     *
-     */
     public function welcome() : Response
     {
         // Return html response
         $user = null;
         if($this->sessionManager->getUserId())
             $user = $this->userDAO->getUserById($this->sessionManager->getUserId());
-
 
         return $this->response->html($this->viewCompiler->compile('welcome', [
             'user' => $user
@@ -58,6 +53,17 @@ class HomeController extends Controller
     public function routeParameterExample() : Response
     {
         return $this->response->html($this->request->getRouteParam('id'));
+    }
+
+    public function httpClientExample() : Response
+    {
+        return $this->response->json(
+            App::get()->getHttpClient()
+                ->setUrl('https://dummyjson.com/products/1')
+                ->send()
+                ->getResponse(),
+            App::get()->getHttpClient()->getHttpStatus()
+        );
     }
 
 }

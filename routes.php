@@ -11,6 +11,7 @@ return
     ['/form-array-element-example', 'HomeController@arrayElementForm', ['UserLoggedIn']],
     ['/form-array-element-example/save', 'HomeController@arrayElementFormSave', ['UserLoggedIn'], 'KeyValueSaveRequest'],
     ['/route-parameter-example/{id}', 'HomeController@routeParameterExample'],
+    ['/httpclient-example', 'HomeController@httpClientExample'],
 
     // Authentication routes, register/login/logout
     ['/auth/register', 'AuthController@register', ['UserNotLoggedIn']],

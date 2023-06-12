@@ -23,6 +23,7 @@
                 <ol>
                    <li><a href="/form-array-element-example">Submitting and validating a form with array parameters</a> </li>
                     <li><a href="https://drencrom-test/route-parameter-example/101">URI parameter example</a></li>
+                    <li><a href="https://drencrom-test/httpclient-example">HttpClient example</a></li>
                 </ol>
             <?php endif; ?>
 
