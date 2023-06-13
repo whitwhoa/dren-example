@@ -7,7 +7,7 @@
     <div class="col-lg-6 offset-lg-3">
 
         <div class="text-center">
-<!--            <h2>RajPHP</h2>-->
+            <h2>Drencrom PHP Framework</h2>
             <br/>
             Welcome<?php if($user): ?>, <?php echo $user->first_name; ?><?php endif; ?>
             <br/>
@@ -21,9 +21,10 @@
                 <br/>
                 <h2 class="mt-5 mb-3">Additional Usage Examples</h2>
                 <ol>
-                   <li><a href="/form-array-element-example">Submitting and validating a form with array parameters</a> </li>
                     <li><a href="https://drencrom-test/route-parameter-example/101">URI parameter example</a></li>
                     <li><a href="https://drencrom-test/httpclient-example">HttpClient example</a></li>
+                    <li><a href="/form-array-element-example">Submitting and validating a form with array parameters</a> </li>
+                    <li><a href="/file-upload-example">Submitting and validating a form with file uploads</a> </li>
                 </ol>
             <?php endif; ?>
 

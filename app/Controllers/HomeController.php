@@ -66,4 +66,16 @@ class HomeController extends Controller
         );
     }
 
+    public function fileUploadExample() : Response
+    {
+        return $this->response->html($this->viewCompiler->compile('file-upload-example', [
+            'user' => $this->userDAO->getUserById($this->sessionManager->getUserId())
+        ]));
+    }
+
+    public function fileUploadExampleSave() : Response
+    {
+        dad($_FILES);
+    }
+
 }

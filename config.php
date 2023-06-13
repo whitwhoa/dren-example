@@ -19,6 +19,17 @@ return (object)[
             'db'    => 'drencrom_test'
         ]
     ],
-    'display_errors' => true, // TODO: not sure this is used anywhere ???
-    'cache_routes' => false
+
+    // if this is set to true, then a routes.php file will be added to /cache and used for deducing routes instead of
+    // recreating the regex strings and mappings for every request. This should be enabled in production, but remember
+    // that if any changes are uploaded that affect routes, the /cache/routes.php file must be cleared before they will
+    // take effect.
+    'cache_routes' => false,
+
+    // mapping of 'mime/type' => 'ext' of any/all mime types you wish a client to be able to upload
+    'allowed_file_upload_mimes' => [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/gif' => 'gif'
+    ]
 ];
