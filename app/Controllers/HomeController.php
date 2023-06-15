@@ -75,7 +75,20 @@ class HomeController extends Controller
 
     public function fileUploadExampleSave() : Response
     {
-        dad($_FILES);
+        $images = $this->request->files('images');
+
+        if($this->request->hasFile('image1'))
+            $images[] = $this->request->file('image1');
+
+        if($this->request->hasFile('image2'))
+            $images[] = $this->request->file('image2');
+
+        foreach($images as $img)
+            if(!$img->hasError()) // should be checking this in request validator not here, but this is simple example for time being
+                $img->storeAs('/var/www/drencrom-test/storage/uploads', uuid_create_v4() . '.' . $img->getExt());
+
+
+        return $this->response->redirect($this->request->getReferrer());
     }
 
 }

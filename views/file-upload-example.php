@@ -30,15 +30,15 @@
             <form action="/file-upload-example/save" method="post" enctype="multipart/form-data">
                 <div class="form-group">
                     <label for="images">Select Multiple Images</label>
-                    <input type="file" class="form-control-file" id="images" name="images[]" multiple required>
+                    <input type="file" class="form-control-file" id="images" name="images[]" multiple>
                 </div>
                 <div class="form-group">
                     <label for="image1">Select Single Image 1</label>
-                    <input type="file" class="form-control-file" id="image1" name="image1" required>
+                    <input type="file" class="form-control-file" id="image1" name="image1">
                 </div>
                 <div class="form-group">
                     <label for="image2">Select Single Image 2</label>
-                    <input type="file" class="form-control-file" id="image2" name="image2" required>
+                    <input type="file" class="form-control-file" id="image2" name="image2">
                 </div>
                 <button type="submit" class="btn btn-primary">Upload Images</button>
             </form>
