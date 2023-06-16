@@ -36,6 +36,18 @@ class HomeController extends Controller
         ]));
     }
 
+    public function optionalFormElementExample() : Response
+    {
+        return $this->response->html($this->viewCompiler->compile('optional-form-element-example', [
+            'user' => $this->userDAO->getUserById($this->sessionManager->getUserId())
+        ]));
+    }
+
+    public function optionalFormElementExampleSave() : Response
+    {
+        dad($this->request);
+    }
+
     public function arrayElementForm() : Response
     {
         return $this->response->html($this->viewCompiler->compile('form-array-element-example', [
@@ -75,7 +87,9 @@ class HomeController extends Controller
 
     public function fileUploadExampleSave() : Response
     {
-        $images = $this->request->files('images');
+        dad($this->request->allFilesByFormName());
+
+        $images = $this->request->groupedFiles('images');
 
         if($this->request->hasFile('image1'))
             $images[] = $this->request->file('image1');
