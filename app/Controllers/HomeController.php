@@ -45,7 +45,9 @@ class HomeController extends Controller
 
     public function optionalFormElementExampleSave() : Response
     {
-        dad($this->request);
+        //dad($this->request);
+        // do nothing, just return
+        return $this->response->redirect($this->request->getReferrer());
     }
 
     public function arrayElementForm() : Response
@@ -87,6 +89,8 @@ class HomeController extends Controller
 
     public function fileUploadExampleSave() : Response
     {
+        //return $this->response->redirect($this->request->getReferrer());
+
         dad($this->request->allFilesByFormName());
 
         $images = $this->request->groupedFiles('images');

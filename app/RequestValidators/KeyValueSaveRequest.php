@@ -51,7 +51,7 @@ class KeyValueSaveRequest extends RequestValidator
             'keyValPair' => 'required|#is_array|#min_array_elements:1',
             'keyValPair.*.key' => 'required',
             'keyValPair.*.value' => 'required',
-            'keyValPair.*.notes' => '#is_array',
+            'keyValPair.*.notes' => 'nullable|#is_array',
             'keyValPair.*.notes.*' => 'max_char:100'
         ];
 

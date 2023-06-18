@@ -8,7 +8,11 @@
 
             <div class="text-center">
                 <p>
-                Example of submitting a form where the value being submitted is optional
+                Example of submitting a form where the value being submitted is optional. <br/><br/>
+                    Validator expects the form element to either not be present in the request, ie you will need
+                    to open dev tools and remove the form input and then submit the form to test this, or the value to
+                    be at least 3 characters if the form element is provided.<br/><br/>
+                    If you click save and the page reloads and you see no errors, the request was successful
                 </p>
             </div>
 

@@ -14,10 +14,9 @@ class FileUploadRequest extends RequestValidator
 
     public function setRules(): void
     {
-        // TODO: left off here once I realized I dont think I handled optional form elements in the base
-        // RequestValidator...so we've gotta figure that out
         $this->rules = [
-            'image1' => 'required|is_file'
+            'images' => 'required|is_array',
+            'image1' => 'nullable|is_file'
         ];
 
         $this->messages = [
