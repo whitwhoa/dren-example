@@ -15,8 +15,6 @@ class AuthLoginRequest extends RequestValidator
 {
     private UserDAO $userDAO;
 
-    protected string $failureResponseType = 'redirect'; // or json
-
     public function __construct(Request $r)
     {
         parent::__construct($r);

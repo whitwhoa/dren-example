@@ -10,8 +10,6 @@ use Dren\RequestValidator;
 
 class KeyValueSaveRequest extends RequestValidator
 {
-    protected string $failureResponseType = 'redirect'; // or json
-
     /*
      *
 (object) array(

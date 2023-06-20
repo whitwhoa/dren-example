@@ -2,6 +2,7 @@
 
 return (object)[
     'app_name' => 'test',
+    'display_errors' => true,
     'session' => (object)[
         'enabled' => true, // are we using sessions or not
         'type' => 'file', // or redis...eventually
@@ -9,7 +10,7 @@ return (object)[
         'lifetime' => 8035200, // destroy session after this many seconds of inactivity (8035200 === ~3 months)
         //'regenerate_token_after' => 300, // regenerate cookie token after this many seconds | if null then never
         //'remove_stale_after' =>  15, // remove stale sessions after this many seconds (gives) | can be null if regenerate_token_after is null
-        'directory' => '/storage/sessions' // this will be prepended with the value of $privateDirectory fron index.php
+        'directory' => '/storage/sessions' // this will be prepended with the value of $privateDirectory from index.php
     ],
     'databases'  => [
         [
@@ -30,6 +31,7 @@ return (object)[
     'allowed_file_upload_mimes' => [
         'image/jpeg' => 'jpg',
         'image/png' => 'png',
-        'image/gif' => 'gif'
+        'image/gif' => 'gif',
+        'image/bmp' => 'bmp'
     ]
 ];

@@ -10,8 +10,6 @@ use Dren\RequestValidator;
 
 class AuthRegisterRequest extends RequestValidator
 {
-    protected string $failureResponseType = 'redirect'; // or json
-
 
     public function setRules(): void
     {
