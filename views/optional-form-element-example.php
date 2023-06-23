@@ -39,7 +39,7 @@
             <form action="/optional-form-element-example/save" method="POST" id="optionalFormElementForm">
                 <input type="text" class="form-control" name="testTextInput"/>
 
-                <div class="text-right">
+                <div class="text-end">
                     <button type="submit" class="btn btn-primary mt-2 " id="optionalFormElementFormSubmitButton">Save</button>
                 </div>
 

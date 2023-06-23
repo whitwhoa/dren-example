@@ -28,19 +28,22 @@
             <?php endif; ?>
 
             <form action="/file-upload-example/save" method="post" enctype="multipart/form-data">
-                <div class="form-group">
+
+                <div class="form-group mb-2">
                     <label for="images">Select Multiple Images</label>
-                    <input type="file" class="form-control-file" id="images" name="images[]" multiple>
+                    <input type="file" class="form-control" id="images" name="images[]" multiple>
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-2">
                     <label for="image1">Select Single Image 1</label>
-                    <input type="file" class="form-control-file" id="image1" name="image1">
+                    <input type="file" class="form-control" id="image1" name="image1">
                 </div>
-                <div class="form-group">
+                <div class="form-group mb-2">
                     <label for="image2">Select Single Image 2</label>
-                    <input type="file" class="form-control-file" id="image2" name="image2">
+                    <input type="file" class="form-control" id="image2" name="image2">
                 </div>
-                <button type="submit" class="btn btn-primary">Upload Images</button>
+
+                <button type="submit" class="btn btn-primary w-100 mt-3">Upload Images</button>
+
             </form>
 
         </div>

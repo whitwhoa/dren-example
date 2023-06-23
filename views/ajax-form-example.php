@@ -63,34 +63,37 @@
 
                 <div>Example radio buttons</div>
                 <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios1" value="opt1" checked="">
+                    <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios1" value="opt1" checked="">
+                    <label class="form-check-label" for="optionsRadios1">
                         Option one
                     </label>
                 </div>
                 <div class="form-check">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios2" value="opt2">
+                    <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios2" value="opt2">
+                    <label class="form-check-label" for="optionsRadios2">
                         Option two
                     </label>
                 </div>
-                <div class="form-check disabled">
-                    <label class="form-check-label">
-                        <input type="radio" class="form-check-input" name="optionsRadios" id="optionsRadios3" value="opt3">
+                <div class="form-check">
+                    <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios3" value="opt3">
+                    <label class="form-check-label" for="optionsRadios3">
                         Option three
                     </label>
                 </div>
 
+
+
+
                 <div class="mt-3">Example check boxes</div>
                 <div class="form-check">
-                    <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" name="optionCheckboxes[1]" value="value1" checked="">
+                    <input class="form-check-input" type="checkbox" id="optionCheckboxes1" name="optionCheckboxes[1]" value="value1" checked="">
+                    <label class="form-check-label" for="optionCheckboxes1">
                         Option one
                     </label>
                 </div>
                 <div class="form-check disabled">
-                    <label class="form-check-label">
-                        <input class="form-check-input" type="checkbox" name="optionCheckboxes[2]" value="value2">
+                    <input class="form-check-input" type="checkbox" id="optionCheckboxes2" name="optionCheckboxes[2]" value="value2">
+                    <label class="form-check-label" for="optionCheckboxes2">
                         Option two
                     </label>
                 </div>

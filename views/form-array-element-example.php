@@ -27,7 +27,7 @@
                 </div>
             <?php endif; ?>
 
-            <div class="text-right">
+            <div class="text-end">
                 <button class="btn btn-primary" id="addKeyValButton">Add Key Value Pair</button>
             </div>
             <form action="/form-array-element-example/save" method="POST" id="keyValuePairForm">

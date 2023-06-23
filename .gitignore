@@ -3,3 +3,6 @@ cache/routes.php
 .idea
 storage/sessions/*
 !storage/sessions/.gitkeep
+
+storage/uploads/*
+!storage/uploads/.gitkeep
