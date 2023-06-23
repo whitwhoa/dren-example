@@ -71,12 +71,13 @@ class HomeController extends Controller
 
     public function httpClientExample() : Response
     {
-        return $this->response->json(
+        return $this->response
+            ->setCode((int)App::get()->getHttpClient()->getHttpStatus())
+            ->json(
             App::get()->getHttpClient()
                 ->setUrl('https://dummyjson.com/products/1')
                 ->send()
                 ->getResponse(),
-            App::get()->getHttpClient()->getHttpStatus()
         );
     }
 
@@ -107,6 +108,20 @@ class HomeController extends Controller
 
 
         return $this->response->redirect($this->request->getReferrer());
+    }
+
+    public function ajaxFormExample() : Response
+    {
+        return $this->response->html($this->viewCompiler->compile('ajax-form-example', [
+            'user' => $this->userDAO->getUserById($this->sessionManager->getUserId())
+        ]));
+    }
+
+    public function ajaxFormExampleSave() : Response
+    {
+        dad($this->request);
+
+
     }
 
 }

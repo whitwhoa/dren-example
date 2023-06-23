@@ -16,6 +16,8 @@ return
     ['/httpclient-example', 'HomeController@httpClientExample'],
     ['/file-upload-example', 'HomeController@fileUploadExample', ['UserLoggedIn']],
     ['/file-upload-example/save', 'HomeController@fileUploadExampleSave', ['UserLoggedIn'], 'FileUploadRequest'],
+    ['/ajax-form-example', 'HomeController@ajaxFormExample', ['UserLoggedIn']],
+    ['/ajax-form-example/save', 'HomeController@ajaxFormExampleSave', ['UserLoggedIn'], 'AjaxFormExampleSaveRequest'],
 
     // Authentication routes, register/login/logout
     ['/auth/register', 'AuthController@register', ['UserNotLoggedIn']],
