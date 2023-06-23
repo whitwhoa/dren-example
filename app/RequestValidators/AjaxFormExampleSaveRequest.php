@@ -28,7 +28,7 @@ class AjaxFormExampleSaveRequest extends RequestValidator
     public function setRules(): void
     {
         $this->rules = [
-            'exampleText' => 'required',
+            'exampleText' => 'run_all|required|numeric',
             'exampleSelect' => 'in:1,2,3',
             'exampleTextarea' => 'min_char:10',
             'optionsRadios' => 'required|in:opt1,opt2',
