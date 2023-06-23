@@ -29,7 +29,7 @@ class AuthLoginRequest extends RequestValidator
         $this->rules = [
             'email' => ['required','email'],
             'password' => 'required|#max_char:100',
-            '_generic_' => [function(&$requestData, &$errors){
+            '_generic_' => [function(&$requestData, &$errors, &$fenceUp){
 
                 // Leaving this here as an example to show that this is no longer needed when using the fence "#" character
                 // before a validation method call...since the validator will stop processing and kick back to the client

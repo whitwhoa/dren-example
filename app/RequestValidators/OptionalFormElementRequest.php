@@ -14,6 +14,7 @@ class OptionalFormElementRequest extends RequestValidator
     {
 
         $this->rules = [
+            //'testTextInput' => 'sometimes|min_char:3',
             'testTextInput' => 'nullable|min_char:3'
         ];
 

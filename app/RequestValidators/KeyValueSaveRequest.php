@@ -50,6 +50,7 @@ class KeyValueSaveRequest extends RequestValidator
             'keyValPair.*.key' => 'required',
             'keyValPair.*.value' => 'required',
             'keyValPair.*.notes' => 'nullable|#is_array',
+            //'keyValPair.*.notes' => '#is_array',
             'keyValPair.*.notes.*' => 'max_char:100'
         ];
 

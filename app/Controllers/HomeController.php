@@ -90,10 +90,6 @@ class HomeController extends Controller
 
     public function fileUploadExampleSave() : Response
     {
-        //return $this->response->redirect($this->request->getReferrer());
-
-        dad($this->request->allFilesByFormName());
-
         $images = $this->request->groupedFiles('images');
 
         if($this->request->hasFile('image1'))

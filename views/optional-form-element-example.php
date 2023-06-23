@@ -12,7 +12,12 @@
                     Validator expects the form element to either not be present in the request, ie you will need
                     to open dev tools and remove the form input and then submit the form to test this, or the value to
                     be at least 3 characters if the form element is provided.<br/><br/>
-                    If you click save and the page reloads and you see no errors, the request was successful
+                    If you click save and the page reloads and you see no errors, the request was successful<br/><br/>
+                    If you go to OptionalFormElementRequest.php and swap the "nullable" method out with "sometimes", then
+                    you will be able to submit the form IF you remove the text input element completely, BUT if it exists
+                    in the request it MUST contain a value that is not null....so basically "nullable" and "sometimes"
+                    do the exact same thing, only "nullable" allows the element to be submitted with a null value or empty
+                    string, whereas "sometimes" requires a value to be present if the form element is present in the request
                 </p>
             </div>
 
