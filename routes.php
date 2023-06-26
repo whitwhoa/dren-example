@@ -16,6 +16,7 @@ return
     ['/httpclient-example', 'HomeController@httpClientExample'],
     ['/file-upload-example', 'HomeController@fileUploadExample', ['UserLoggedIn']],
     ['/file-upload-example/save', 'HomeController@fileUploadExampleSave', ['UserLoggedIn'], 'FileUploadRequest'],
+    ['/custom-html-element', 'HomeController@customHtmlElement'],
     ['/ajax-form-example', 'HomeController@ajaxFormExample', ['UserLoggedIn']],
     ['/ajax-form-example/save', 'HomeController@ajaxFormExampleSave', ['UserLoggedIn'], 'AjaxFormExampleSaveRequest'],
 

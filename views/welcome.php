@@ -24,6 +24,7 @@
                     <li><a href="/route-parameter-example/101">URI parameter example</a></li>
                     <li><a href="/httpclient-example">HttpClient example</a></li>
                     <li><a href="/optional-form-element-example">Submitting a form with optional inputs</a></li>
+                    <li><a href="/custom-html-element">Custom Html Element</a> </li>
                     <li><a href="/form-array-element-example">Submitting and validating a form with array parameters</a> </li>
                     <li><a href="/file-upload-example">Submitting and validating a form with file uploads</a> </li>
                     <li><a href="/ajax-form-example">Submitting and validating a form asynchronously</a> </li>

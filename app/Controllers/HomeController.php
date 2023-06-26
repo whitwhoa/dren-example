@@ -106,6 +106,11 @@ class HomeController extends Controller
         return $this->response->redirect($this->request->getReferrer());
     }
 
+    public function customHtmlElement() : Response
+    {
+        return $this->response->html($this->viewCompiler->compile('custom-html-element', []));
+    }
+
     public function ajaxFormExample() : Response
     {
         return $this->response->html($this->viewCompiler->compile('ajax-form-example', [
