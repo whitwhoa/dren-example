@@ -17,7 +17,6 @@
 <body>
 
 
-
 <div class="container">
     <div class="row">
         <div class="col">
@@ -49,9 +48,14 @@
 <!-- First Party -->
 <loading-overlay></loading-overlay>
 <alert-message></alert-message>
+<debug-screen-size></debug-screen-size>
+
+<script src="/js/debug-screen-size.js"></script>
 <script src="/js/alert-message.js"></script>
 <script src="/js/loading-overlay.js"></script>
 <script src="/js/async-form.js"></script>
+
+
 
 <?php echo isset($view_page_specific_js) ? $view_page_specific_js : ''; ?>
 

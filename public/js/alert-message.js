@@ -23,8 +23,7 @@ class AlertMessage extends HTMLElement {
                 border-radius: 5px;
                 font-weight: bold;
                 text-align: center;
-                max-width: 80%;
-                min-width: 25%;
+                width: 85%;
             }
             .success {
                 background-color: #d4edda;
@@ -56,6 +55,60 @@ class AlertMessage extends HTMLElement {
             .alert-message-danger-icon {
                 color: #721c24;
             }
+            #confirmButton {
+                margin-top: 10px;
+                display: none;
+                padding: 10px 15px;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+                color: white;
+                min-width: 25%;
+            }
+
+            .success #confirmButton {
+                background-color: #155724;
+            }
+
+            .warning #confirmButton {
+                background-color: #856404;
+            }
+
+            .danger #confirmButton {
+                background-color: #721c24;
+            }
+            @media (min-width: 576px) { 
+                /* sm */
+                
+            }
+            @media (min-width: 768px) { 
+                /* md */
+                .message-box {
+                    width: 50%;
+                }
+                
+            }
+            @media (min-width: 992px) { 
+                /* lg */
+                .message-box {
+                    width: 40%;
+                }
+                
+            }
+            @media (min-width: 1200px) { 
+                /* xl */
+                .message-box {
+                    width: 35%;
+                }
+                
+            }
+            @media (min-width: 1400px) { 
+                /* xxl */
+                .message-box {
+                    width: 28%;
+                }
+            }
+            
         </style>
         <div class="message-box" id="messageBox">
             <svg id="icon" fill="currentColor" viewBox="0 0 16 16">
@@ -63,11 +116,21 @@ class AlertMessage extends HTMLElement {
                 <path class="innerPath"/>
             </svg>
             <div id="messageText"></div>
+            <button id="confirmButton">Ok</button>
         </div>
         `;
+
+        this.confirmButton = this.shadowRoot.querySelector('#confirmButton');
+        this.confirmButton.addEventListener('click', () => {
+            if (this.callbackFunction)
+            {
+                this.callbackFunction();
+                this.hide();
+            }
+        });
     }
 
-    show(message, messageType) {
+    show(message, messageType, action = null) {
         let icon = this.shadowRoot.querySelector('#icon');
         let messageText = this.shadowRoot.querySelector('#messageText');
         let messageBox = this.shadowRoot.querySelector('#messageBox');
@@ -93,11 +156,33 @@ class AlertMessage extends HTMLElement {
         }
 
         this.style.display = 'flex';
+
+        this.confirmButton.style.display = 'none';
+
+        if(action === null)
+            return;
+
+        // if a callback was provided, then we know we're processing a confirmation
+        if(typeof action === 'function')
+        {
+            this.callbackFunction = action;
+            this.confirmButton.style.display = 'block';
+        }
+        // if provided action value is a number, then we know we want to auto hide after this number of milliseconds
+        else if(!isNaN(Number(action)))
+        {
+            setTimeout(()=>{
+                this.hide();
+            }, parseInt(action));
+        }
+
     }
 
     hide() {
         this.shadowRoot.querySelector('#messageText').textContent = '';
         this.style.display = 'none';
+        this.confirmButton.style.display = 'none';
+        this.callbackFunction = null;
     }
 }
 

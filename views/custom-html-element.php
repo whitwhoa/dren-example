@@ -49,11 +49,18 @@
         let alertBox = document.querySelector('alert-message');
 
         $('#alertMessageButton').click(function(){
-            alertBox.show('Success!', 'success');
 
-            setTimeout(function(){
-                alertBox.hide();
-            }, 2000);
+            // with confirmation callback
+            alertBox.show('Success!', 'success', () => {});
+
+            // with confirmation callback, error example
+            //alertBox.show('An unexpected error has occurred while processing your request', 'danger', () => {});
+
+            // with auto hide
+            //alertBox.show('Success!', 'success', 2000);
+
+            // handle clear manually with some custom functionality later
+            //alertBox.show('Success!', 'success');
 
         });
 
