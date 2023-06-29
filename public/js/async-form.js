@@ -8,6 +8,7 @@
     redirect-url="/some/url/route/{response_var_name}/{response_var_name_2}/...."
     success-message="Success!"
     processing-message="Processing..."
+    unnamed-element-validation-callback="myGloballyAccessibleFunction()"
 
  */
 
@@ -70,12 +71,12 @@ class AsyncForm extends HTMLElement
         try
         {
             // Get attributes
-            let csrfToken = this.getAttribute('csrf-token');
             let bearerToken = this.getAttribute('bearer-token');
             let validationErrors = this.getAttribute('validation-errors');
             let onResponse = this.getAttribute('on-response');
             let successMessage = this.getAttribute('success-message');
             let redirectUrl = this.getAttribute('redirect-url');
+            let unnamedElementValidationCallback = this.getAttribute('unnamed-element-validation-callback');
 
             // Set request data
             let fetchOptions = {
@@ -95,9 +96,10 @@ class AsyncForm extends HTMLElement
 
                 If you are using this element within an spa (or in our case an spa capacitor mobile app), you need to
                 include an access token in the http Authorization header
+
+                // change csrfToken to be included as hidden value in form data vs in header, removed all together
+                // because you can just add it to the form elements in the markup
              */
-            if (csrfToken)
-                fetchOptions.headers['X-CSRF-TOKEN'] = csrfToken;
             if (bearerToken)
                 fetchOptions.headers['Authorization'] = 'Bearer ' + bearerToken;
 
@@ -173,6 +175,10 @@ class AsyncForm extends HTMLElement
                 // if we made it here, then we know we have received a response with code 422 and that the required
                 // 'errors' property is present within the responseJson object.
 
+                // TODO: THIS WHERE WE LEFT OFF....need logic that utilizes the validationErrors variable to determine if
+                // we should display all the error messages in one big block right above the form, or use individual
+                // validation messages and css classes
+
                 // clear previous errors
                 this.form.querySelectorAll('.invalid-feedback').forEach(e => e.parentNode.removeChild(e));
 
@@ -188,8 +194,38 @@ class AsyncForm extends HTMLElement
                 // remove 'is-invalid' class from all elements
                 inputElements.forEach(e => e.classList.remove('is-invalid'));
 
+                // must figure out how to handle elements of arrays, going to go hack around in the
+                // form-array-element-example...
+                //
+                // ok, so when submitting form inputs that are array's their names follow the below format
+                // [
+                //     "keyValPair[0][key]",
+                //     "keyValPair[0][value]"
+                // ]
+                // I have tweaked the request validator to output using this format instead of the .* format so the
+                // names that are returned can be used just like names that are not arrays and then referenced correctly
+                // in the below code to auto set error styles/messages...woot
 
-                //TODO: THIS WHERE WE LEFT OFF
+                // add invalid classes to all elements which require them
+                Object.keys(responseJson.errors).forEach((key) => {
+
+                    if(namedElements.includes(key))
+                    {
+                        let element = this.form.querySelector('input[name="' + key + '"]') ||
+                            this.form.querySelector('select[name="' + key + '"]') ||
+                            this.form.querySelector('textarea[name="' + key + '"]');
+
+                        element.classList.add('is-invalid');
+
+                        element.insertAdjacentHTML('afterend','<span class="invalid-feedback" role="alert"><strong>' +
+                            responseJson.errors[key][0] + '</strong></span>');
+                    }
+
+                    // include a callback here for extended functionality
+                    if(unnamedElementValidationCallback && typeof window[unnamedElementValidationCallback] === 'function')
+                        window[unnamedElementValidationCallback](key, responseJson.errors);
+
+                });
 
             }
         }

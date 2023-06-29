@@ -29,6 +29,7 @@
 
             <div class="text-end">
                 <button class="btn btn-primary" id="addKeyValButton">Add Key Value Pair</button>
+                <button type="button" id="testButton">Yep</button>
             </div>
             <form action="/form-array-element-example/save" method="POST" id="keyValuePairForm">
 
@@ -61,4 +62,26 @@
 
 <?php start_section(); ?>
     <script src="/js/form-array-element-example.js"></script>
+
+    <script>
+        $('document').ready(function(){
+
+            $('#testButton').click(function(){
+
+                // get all input elements within form
+                let inputElements = document.querySelectorAll("input, textarea, select");
+
+                // convert the NodeList to an array, extract the "name" property of each element,
+                // and filter out duplicate names
+                let namedElements = Array.from(inputElements)
+                    .map((element) => element.name)
+                    .filter((name, index, array) => array.indexOf(name) === index);
+
+                console.log(namedElements);
+
+            });
+
+        });
+    </script>
+
 <?php $view_page_specific_js = end_section(); ?>

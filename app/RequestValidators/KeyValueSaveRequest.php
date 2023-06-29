@@ -47,6 +47,7 @@ class KeyValueSaveRequest extends RequestValidator
     {
         $this->rules = [
             'keyValPair' => 'required|#is_array|#min_array_elements:1',
+            //'keyValPair' => 'required|is_array|min_array_elements:1',
             'keyValPair.*.key' => 'required',
             'keyValPair.*.value' => 'required',
             'keyValPair.*.notes' => 'nullable|#is_array',
