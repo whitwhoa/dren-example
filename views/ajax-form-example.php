@@ -39,13 +39,12 @@
             <?php endif; ?>
 
             <form action="/ajax-form-example/save" method="POST" id="ajaxExampleForm">
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label for="exampleText">Email text</label>
                     <input type="text" class="form-control" id="exampleText" name="exampleText" placeholder="Enter text">
-                    <small id="textHelp" class="form-text text-muted">Here's a little message</small>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label for="exampleSelect">Example select</label>
                     <select class="form-control" id="exampleSelect" name="exampleSelect">
                         <option>1</option>
@@ -56,7 +55,7 @@
                     </select>
                 </div>
 
-                <div class="form-group">
+                <div class="form-group mb-3">
                     <label for="exampleTextarea">Example textarea</label>
                     <textarea class="form-control" id="exampleTextarea" name="exampleTextarea" rows="3"></textarea>
                 </div>
@@ -74,7 +73,7 @@
                         Option two
                     </label>
                 </div>
-                <div class="form-check">
+                <div class="form-check mb-3">
                     <input class="form-check-input" type="radio" name="optionsRadios" id="optionsRadios3" value="opt3">
                     <label class="form-check-label" for="optionsRadios3">
                         Option three
@@ -110,5 +109,14 @@
 
 
 <?php start_section(); ?>
-    <script src="/js/ajax-form-example.js"></script>
+    <script>
+        $(document).ready(function(){
+
+            let ajaxExampleForm = new AsyncForm("ajaxExampleForm", {
+                successMessage:"Custom Success Message!",
+                validationErrorsDisplayType:"grouped"
+            });
+
+        });
+    </script>
 <?php $view_page_specific_js = end_section(); ?>

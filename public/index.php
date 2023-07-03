@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$start = microtime(true);
+//$start = microtime(true);
 
 
 /* Set $privateDirectory equal to the path where you have installed the drencrom/private
@@ -30,9 +30,9 @@ require $privateDirectory . '/vendor/autoload.php';
 
 
 
-echo '<br/><br/>';
-$end = microtime(true);
-echo  $end - $start;
+//echo '<br/><br/>';
+//$end = microtime(true);
+//echo  $end - $start;
 
 // force an error for testing as this file does not exist in this directory
 //require('/home/jason/dev/test.php');

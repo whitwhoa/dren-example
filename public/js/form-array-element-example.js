@@ -1,3 +1,6 @@
+/*
+    Everywhere I used string concatenation here can be updated to use javascript's built in template syntax
+*/
 function generateKeyValuePairFormElement()
 {
     let existingCount = $('#keyValuePairForm .keyValueFormElement').length;

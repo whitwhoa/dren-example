@@ -81,6 +81,12 @@
 
             });
 
+
+            let ajaxExampleForm = new AsyncForm("keyValuePairForm", {
+                successMessage:"Custom Success Message!"
+            });
+
+
         });
     </script>
 

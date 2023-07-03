@@ -77,7 +77,7 @@ class HomeController extends Controller
             App::get()->getHttpClient()
                 ->setUrl('https://dummyjson.com/products/1')
                 ->send()
-                ->getResponse(),
+                ->getResponse()
         );
     }
 
@@ -120,9 +120,7 @@ class HomeController extends Controller
 
     public function ajaxFormExampleSave() : Response
     {
-        dad($this->request);
-
-
+        return $this->response->json(["status" => "ok"]);
     }
 
 }
