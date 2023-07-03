@@ -1,17 +1,17 @@
 <?php
 
 
-namespace App\RequestValidators;
+namespace App\FormDataValidators;
 
 
 
 use App\Model\DAOs\UserDAO;
 use Dren\Request;
-use Dren\RequestValidator;
+use Dren\FormDataValidator;
 
 
 
-class AuthLoginRequest extends RequestValidator
+class AuthLoginValidator extends FormDataValidator
 {
     private UserDAO $userDAO;
 

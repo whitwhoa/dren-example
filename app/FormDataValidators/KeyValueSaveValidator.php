@@ -1,14 +1,14 @@
 <?php
 
 
-namespace App\RequestValidators;
+namespace App\FormDataValidators;
 
 
-use Dren\RequestValidator;
+use Dren\FormDataValidator;
 
 
 
-class KeyValueSaveRequest extends RequestValidator
+class KeyValueSaveValidator extends FormDataValidator
 {
     /*
      *

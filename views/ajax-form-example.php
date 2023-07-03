@@ -113,8 +113,8 @@
         $(document).ready(function(){
 
             let ajaxExampleForm = new AsyncForm("ajaxExampleForm", {
-                successMessage:"Custom Success Message!",
-                validationErrorsDisplayType:"grouped"
+                successMessage:"Custom Success Message!"
+                //,validationErrorsDisplayType:"grouped"
             });
 
         });

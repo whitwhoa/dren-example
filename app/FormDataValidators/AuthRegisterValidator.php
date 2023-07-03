@@ -1,14 +1,14 @@
 <?php
 
 
-namespace App\RequestValidators;
+namespace App\FormDataValidators;
 
 
-use Dren\RequestValidator;
+use Dren\FormDataValidator;
 
 
 
-class AuthRegisterRequest extends RequestValidator
+class AuthRegisterValidator extends FormDataValidator
 {
 
     public function setRules(): void

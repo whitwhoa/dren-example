@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\RequestValidators;
+namespace App\FormDataValidators;
 
 
-use Dren\RequestValidator;
+use Dren\FormDataValidator;
 
 /*
  *
@@ -23,7 +23,7 @@ use Dren\RequestValidator;
  *
  */
 
-class AjaxFormExampleSaveRequest extends RequestValidator
+class AjaxFormExampleSaveValidator extends FormDataValidator
 {
     public function setRules(): void
     {
