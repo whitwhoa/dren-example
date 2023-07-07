@@ -40,8 +40,9 @@
 
             <form action="/ajax-form-example/save" method="POST" id="ajaxExampleForm">
                 <div class="form-group mb-3">
-                    <label for="exampleText">Email text</label>
-                    <input type="text" class="form-control" id="exampleText" name="exampleText" placeholder="Enter text">
+                    <label for="exampleText">Example text</label>
+                    <input type="text" class="form-control" id="exampleText" name="exampleText" placeholder="__-____"
+                           data-inputmask="'mask': '99-9999'" data-clearmaskonsubmit="true">
                 </div>
 
                 <div class="form-group mb-3">

@@ -6,8 +6,6 @@
     <title><?php echo isset($view_title) ? $view_title : ''; ?></title>
 
 
-<!--    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">-->
-
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
 
@@ -45,15 +43,13 @@
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.min.js"></script>
 
-<!-- First Party -->
+<!-- First Party Custom Elements, defined in drencrom-frontend.js -->
 <loading-overlay></loading-overlay>
 <alert-message></alert-message>
 <debug-screen-size></debug-screen-size>
 
-<script src="/js/debug-screen-size.js"></script>
-<script src="/js/alert-message.js"></script>
-<script src="/js/loading-overlay.js"></script>
-<script src="/js/async-form.js"></script>
+<!-- Compiled via npm, never modify this directly -->
+<script src="/js/drencrom-frontend.js"></script>
 
 
 
