@@ -21,6 +21,9 @@ $privateDirectory = __DIR__ . '/..';
  *****************************************************************************************/
 require $privateDirectory . '/vendor/autoload.php';
 
+/* Preload Router with user defined routes
+ *****************************************************************************************/
+require $privateDirectory . '/routes.php';
 
 /* Bootstrap the application. Tell the Main method that we wish to perform processing of an
  * http request. Pass the $privateDirectory path into our Main class for further usage.
@@ -33,6 +36,3 @@ require $privateDirectory . '/vendor/autoload.php';
 //echo '<br/><br/>';
 //$end = microtime(true);
 //echo  $end - $start;
-
-// force an error for testing as this file does not exist in this directory
-//require('/home/jason/dev/test.php');

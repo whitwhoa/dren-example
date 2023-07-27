@@ -1,31 +1,107 @@
 <?php
 
-/*
- * ['THE URI ROUTE', 'CLASS@METHOD', ['MIDDLEWARE1', 'MIDDLEWARE2'], 'REQUESTVALIDATOR']
- */
+// Authentication routes
+Router::web()
+    ->get('/auth/register')
+    ->controller('AuthController')
+    ->method('register')
+    ->middleware(['UserNotLoggedIn']);
 
-return
-[
-    // Landing page and example routes
-    ['/', 'HomeController@welcome'],
-    ['/optional-form-element-example', 'HomeController@optionalFormElementExample', ['UserLoggedIn']],
-    ['/optional-form-element-example/save', 'HomeController@optionalFormElementExampleSave', ['UserLoggedIn'], 'OptionalFormElementValidator'],
-    ['/form-array-element-example', 'HomeController@arrayElementForm', ['UserLoggedIn']],
-    ['/form-array-element-example/save', 'HomeController@arrayElementFormSave', ['UserLoggedIn'], 'KeyValueSaveValidator'],
-    ['/route-parameter-example/{id}', 'HomeController@routeParameterExample'],
-    ['/httpclient-example', 'HomeController@httpClientExample'],
-    ['/file-upload-example', 'HomeController@fileUploadExample', ['UserLoggedIn']],
-    ['/file-upload-example/save', 'HomeController@fileUploadExampleSave', ['UserLoggedIn'], 'FileUploadValidator'],
-    ['/custom-html-element', 'HomeController@customHtmlElement'],
-    ['/ajax-form-example', 'HomeController@ajaxFormExample', ['UserLoggedIn']],
-    ['/ajax-form-example/save', 'HomeController@ajaxFormExampleSave', ['UserLoggedIn'], 'AjaxFormExampleSaveValidator'],
+Router::web()
+    ->post('/auth/register/save')
+    ->controller('AuthController')
+    ->method('registerSave')
+    ->middleware(['UserNotLoggedIn'])
+    ->formDataValidator('AuthRegisterValidator');
 
-    // Authentication routes, register/login/logout
-    ['/auth/register', 'AuthController@register', ['UserNotLoggedIn']],
-    ['/auth/register/save', 'AuthController@registerSave', ['UserNotLoggedIn'], 'AuthRegisterValidator'],
+Router::web()
+    ->get('/auth/login')
+    ->controller('AuthController')
+    ->method('login')
+    ->middleware(['UserNotLoggedIn']);
 
-    ['/auth/login', 'AuthController@login', ['UserNotLoggedIn']],
-    ['/auth/login/save', 'AuthController@loginSave', ['UserNotLoggedIn'], 'AuthLoginValidator'],
+Router::web()
+    ->post('/auth/login/save')
+    ->controller('AuthController')
+    ->method('loginSave')
+    ->middleware(['UserNotLoggedIn'])
+    ->formDataValidator('AuthLoginValidator');
 
-    ['/auth/logout', 'AuthController@logout', ['UserLoggedIn']],
-];
+Router::web()
+    ->get('/auth/logout')
+    ->controller('AuthController')
+    ->method('logout')
+    ->middleware(['UserLoggedIn']);
+
+// Everything else
+Router::web()
+    ->get('/')
+    ->controller('HomeController')
+    ->method('welcome');
+
+Router::web()
+    ->get('/optional-form-element-example')
+    ->controller('HomeController')
+    ->method('optionalFormElementExample')
+    ->middleware(['UserLoggedIn']);
+
+Router::web()
+    ->post('/optional-form-element-example/save')
+    ->controller('HomeController')
+    ->method('optionalFormElementExampleSave')
+    ->middleware(['UserLoggedIn'])
+    ->formDataValidator('OptionalFormElementValidator');
+
+Router::web()
+    ->get('/form-array-element-example')
+    ->controller('HomeController')
+    ->method('arrayElementForm')
+    ->middleware(['UserLoggedIn']);
+
+Router::web()
+    ->post('/form-array-element-example/save')
+    ->controller('HomeController')
+    ->method('arrayElementFormSave')
+    ->middleware(['UserLoggedIn'])
+    ->formDataValidator('KeyValueSaveValidator');
+
+Router::web()
+    ->get('/route-parameter-example/{id}')
+    ->controller('HomeController')
+    ->method('routeParameterExample');
+
+Router::web()
+    ->get('/httpclient-example')
+    ->controller('HomeController')
+    ->method('httpClientExample');
+
+Router::web()
+    ->get('/file-upload-example')
+    ->controller('HomeController')
+    ->method('fileUploadExample')
+    ->middleware(['UserLoggedIn']);
+
+Router::web()
+    ->post('/file-upload-example/save')
+    ->controller('HomeController')
+    ->method('fileUploadExampleSave')
+    ->middleware(['UserLoggedIn'])
+    ->formDataValidator('FileUploadValidator');
+
+Router::web()
+    ->get('/custom-html-element')
+    ->controller('HomeController')
+    ->method('customHtmlElement');
+
+Router::web()
+    ->get('/ajax-form-example')
+    ->controller('HomeController')
+    ->method('ajaxFormExample')
+    ->middleware(['UserLoggedIn']);
+
+Router::web()
+    ->post('/ajax-form-example/save')
+    ->controller('HomeController')
+    ->method('ajaxFormExampleSave')
+    ->middleware(['UserLoggedIn'])
+    ->formDataValidator('AjaxFormExampleSaveValidator');
