@@ -29,7 +29,7 @@
 
             <div class="text-end">
                 <button class="btn btn-primary" id="addKeyValButton">Add Key Value Pair</button>
-                <button type="button" id="testButton">Yep</button>
+                <button type="button" class="btn btn-secondary" id="testButton">Print element array to console</button>
             </div>
             <form action="/form-array-element-example/save" method="POST" id="keyValuePairForm">
 
@@ -81,10 +81,11 @@
 
             });
 
-
-            let ajaxExampleForm = new AsyncForm("keyValuePairForm", {
-                successMessage:"Custom Success Message!"
-            });
+            // Used this for testing array parameter form data validation, but will break if submission attempted
+            // because route is not configured to return json (just fyi).
+            // let ajaxExampleForm = new AsyncForm("keyValuePairForm", {
+            //     successMessage:"Custom Success Message!"
+            // });
 
 
         });
