@@ -12,8 +12,6 @@ class UserDAO extends DAO
 {
     public function createNewUser(array $u) : int
     {
-        //dad((array)$u);
-        echo "got here\n";
         return $this->db
             ->query("INSERT INTO users(first_name, last_name, email, password) VALUES(?,?,?,?)", (array)$u)
             ->exec();

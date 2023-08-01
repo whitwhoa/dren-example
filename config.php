@@ -1,11 +1,29 @@
 <?php
 
+/*
+ * NEVER TRACK THIS FILE IN A VERSION CONTROL SYSTEM AS IT CONTAINS SENSITIVE INFORMATION.
+ *
+ * We've included it in this example as a reference. In production, make sure you set up a .gitignore (or equivalent)
+ * entry!
+ *
+ * */
+
 return (object)[
     'app_name' => 'test',
     'display_errors' => true,
     'session' => (object)[
 
+        // 32 byte or more cryptographically secure secret that is not known to anyone but your application
+        // For example, you could use the following in an external script to generate your token:
+        // bin2hex(random_bytes(32));
+        'signature_secret' => 'd27ade1e569601dccedb3722c072b1629e2703a5bec65b636b21a62d7ad59be2',
+
         'directory' => '/storage/sessions', // this will be prepended with the value of $privateDirectory from index.php
+
+        // Directory in which we save lock files for remember_ids when they are being used to generate session_ids so
+        // that any concurrent requests will block until the first request has completed and use the updated session_id
+        // without regenerating another session_id. Will be prepended with value of $privateDirectory from index.php
+        'rid_lock_dir' => '/storage/rememberlocks',
 
         // This is the duration (in seconds) in which the session_id is allowed to live for before being re-issued
         // to the user
@@ -51,6 +69,9 @@ return (object)[
 
     ],
     'databases'  => [
+        // Multiple database connections allowed, but first database in list must always be the default database,
+        // ie the database which contains the tables utilized by the framework. Unless of course you are not using
+        // any of the functionality which depends on the framework database tables (remember_ids, jobs, etc)
         [
             'host'  => 'localhost',
             'user'  => 'root',
