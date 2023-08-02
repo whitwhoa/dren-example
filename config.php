@@ -11,12 +11,19 @@
 return (object)[
     'app_name' => 'test',
     'display_errors' => true,
+    // 32 byte or more cryptographically secure secret that is not known to anyone but your application
+    // For example, you could use the following in an external script to generate your token:
+    // bin2hex(random_bytes(32));
+    'encryption_key' => 'd27ade1e569601dccedb3722c072b1629e2703a5bec65b636b21a62d7ad59be2',
     'session' => (object)[
 
-        // 32 byte or more cryptographically secure secret that is not known to anyone but your application
-        // For example, you could use the following in an external script to generate your token:
-        // bin2hex(random_bytes(32));
-        'signature_secret' => 'd27ade1e569601dccedb3722c072b1629e2703a5bec65b636b21a62d7ad59be2',
+        'web_client_name' => 'session_id', // name of the cookie where session token is stored for web routes
+
+        'mobile_client_name' => 'Session-Id', // name of the custom http header used by mobile applications if so desired
+
+        'rid_web_client_name' => 'remember_id', // name of cookie where remember token is stored for web routes if utilized
+
+        'rid_mobile_client_name' => 'Remember-Id', // name of the custom http header used by mobile applications if so desired
 
         'directory' => '/storage/sessions', // this will be prepended with the value of $privateDirectory from index.php
 
