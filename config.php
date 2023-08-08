@@ -11,6 +11,7 @@
 return (object)[
     'app_name' => 'test',
     'display_errors' => true,
+    'log_file' => '/storage/application.log',
     // 32 byte or more cryptographically secure secret that is not known to anyone but your application
     // For example, you could use the following in an external script to generate your token:
     // bin2hex(random_bytes(32));
@@ -34,7 +35,7 @@ return (object)[
 
         // This is the duration (in seconds) in which the session_id is allowed to live for before being re-issued
         // to the user
-        'valid_for' => 600, // 10min
+        'valid_for' => 300, // 5min
 
         // The duration (in seconds) which a session_id remains active after having been re-issued to the user. This
         // mitigates issues where a user might have a bad connection and a new token is issued, but the response is

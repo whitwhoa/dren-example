@@ -22,7 +22,7 @@ class UserNotLoggedIn extends Middleware
     public function handle()
     {
         // User is logged in, so we need to return a redirect response
-        if($this->sessionManager->getUserId())
+        if($this->sessionManager->isAuthenticated())
             return (new Response())->redirect('/');
     }
 

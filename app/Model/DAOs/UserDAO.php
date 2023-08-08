@@ -18,8 +18,15 @@ class UserDAO extends DAO
     }
     public function getUserById(int $id) : ?object
     {
+        $q = <<<EOT
+SELECT accounts.*, user_profiles.*
+FROM accounts
+JOIN user_profiles ON accounts.id = user_profiles.account_id
+WHERE accounts.id = ?
+EOT;
+
         return $this->db
-            ->query("SELECT * FROM users WHERE id = ?", [$id])
+            ->query($q, [$id])
             ->singleAsObj()
             ->exec();
     }

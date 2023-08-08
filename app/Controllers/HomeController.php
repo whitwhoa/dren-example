@@ -28,8 +28,8 @@ class HomeController extends Controller
     {
         // Return html response
         $user = null;
-        if($this->sessionManager->getUserId())
-            $user = $this->userDAO->getUserById($this->sessionManager->getUserId());
+        if($this->sessionManager->isAuthenticated())
+            $user = $this->userDAO->getUserById($this->sessionManager->getAccountId());
 
         return $this->response->html($this->viewCompiler->compile('welcome', [
             'user' => $user
@@ -39,7 +39,7 @@ class HomeController extends Controller
     public function optionalFormElementExample() : Response
     {
         return $this->response->html($this->viewCompiler->compile('optional-form-element-example', [
-            'user' => $this->userDAO->getUserById($this->sessionManager->getUserId())
+            'user' => $this->userDAO->getUserById($this->sessionManager->getAccountId())
         ]));
     }
 
@@ -53,14 +53,14 @@ class HomeController extends Controller
     public function arrayElementForm() : Response
     {
         return $this->response->html($this->viewCompiler->compile('form-array-element-example', [
-            'user' => $this->userDAO->getUserById($this->sessionManager->getUserId()),
-            'userKeyVals' => $this->userDAO->getKeyValsWithNotes($this->sessionManager->getUserId())
+            'user' => $this->userDAO->getUserById($this->sessionManager->getAccountId()),
+            'userKeyVals' => $this->userDAO->getKeyValsWithNotes($this->sessionManager->getAccountId())
         ]));
     }
 
     public function arrayElementFormSave() : Response
     {
-        $this->userDAO->setKeyValsWithNotes($this->sessionManager->getUserId(), $this->request->getPostData()->keyValPair);
+        $this->userDAO->setKeyValsWithNotes($this->sessionManager->getAccountId(), $this->request->getPostData()->keyValPair);
         return $this->response->redirect($this->request->getReferrer());
     }
 
@@ -84,7 +84,7 @@ class HomeController extends Controller
     public function fileUploadExample() : Response
     {
         return $this->response->html($this->viewCompiler->compile('file-upload-example', [
-            'user' => $this->userDAO->getUserById($this->sessionManager->getUserId())
+            'user' => $this->userDAO->getUserById($this->sessionManager->getAccountId())
         ]));
     }
 
@@ -114,7 +114,7 @@ class HomeController extends Controller
     public function ajaxFormExample() : Response
     {
         return $this->response->html($this->viewCompiler->compile('ajax-form-example', [
-            'user' => $this->userDAO->getUserById($this->sessionManager->getUserId())
+            'user' => $this->userDAO->getUserById($this->sessionManager->getAccountId())
         ]));
     }
 

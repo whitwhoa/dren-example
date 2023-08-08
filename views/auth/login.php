@@ -4,6 +4,7 @@
 <?php start_section(); ?>
 
 <form action="/auth/login/save" method="POST">
+    <input type="hidden" name="csrf" value="<?php echo $sessionManager->getCsrf(); ?>"/>
 
     <div class="row mt-4">
         <div class="col-lg-6 offset-lg-3">
