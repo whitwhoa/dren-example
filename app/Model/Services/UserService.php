@@ -30,4 +30,17 @@ class UserService extends Service
         ]);
     }
 
+    public function authenticate(string $username, string $password): ?object
+    {
+        $u = $this->userDAO->getUserByUsername($username);
+
+        if(!$u)
+            return null;
+
+        if(!password_verify($password, $u->password))
+            return null;
+
+        return $u;
+    }
+
 }

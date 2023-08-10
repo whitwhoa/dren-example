@@ -12,6 +12,8 @@ class UserDAO extends DAO
 {
     public function createNewUser(array $u) : int
     {
+
+
         return $this->db
             ->query("INSERT INTO users(first_name, last_name, email, password) VALUES(?,?,?,?)", (array)$u)
             ->exec();
@@ -31,17 +33,47 @@ EOT;
             ->exec();
     }
 
-    public function getUserByEmail(string $email) : ?object
+    public function getUserByUsername(string $username) : ?object
     {
+        $q = <<<EOT
+SELECT accounts.*, user_profiles.*
+FROM accounts
+JOIN user_profiles ON accounts.id = user_profiles.account_id
+WHERE accounts.username = ?
+EOT;
+
         return $this->db
-            ->query("SELECT * FROM users WHERE email = ?", [$email])
+            ->query($q, [$username])
             ->singleAsObj()
             ->exec();
     }
 
+    public function getRoles(int $userId): array
+    {
+        $q = <<<EOT
+SELECT 
+    roles.role
+FROM accounts
+JOIN account_role ON accounts.id = account_role.account_id
+JOIN roles ON account_role.role_id = roles.id
+WHERE accounts.id = ?;
+EOT;
+        $resultSet = $this->db
+            ->query($q, [$userId])
+            ->asObj()
+            ->exec();
+
+        $roles = [];
+        foreach($resultSet as $r)
+            $roles[] = $r->role;
+
+        return $roles;
+    }
+
     public function emailExists(string $email) : bool
     {
-        return $this->getUserByEmail($email) != null;
+        //return $this->getUserByEmail($email) != null;
+        return true;
     }
 
     public function getKeyVals(int $id) : array

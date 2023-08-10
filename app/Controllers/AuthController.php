@@ -69,8 +69,11 @@ class AuthController extends Controller
      */
     public function loginSave() : Response
     {
-        $u = $this->userDAO->getUserByEmail($this->request->getPostData()->email);
-        $this->sessionManager->regenerate(true, $u->id);
+        // authentication handled in form data validator, so if we're here, we know we're good
+        $u = $this->userDAO->getUserByUsername($this->request->getPostData()->email);
+        $roles = $this->userDAO->getRoles($u->id);
+
+        $this->sessionManager->upgradeSession($u->id, $roles);
 
         return $this->response->redirect('/');
     }

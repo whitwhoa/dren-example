@@ -6,6 +6,7 @@ namespace App\FormDataValidators;
 
 
 use App\Model\DAOs\UserDAO;
+use App\Model\Services\UserService;
 use Dren\Request;
 use Dren\FormDataValidator;
 
@@ -13,13 +14,13 @@ use Dren\FormDataValidator;
 
 class AuthLoginValidator extends FormDataValidator
 {
-    private UserDAO $userDAO;
+    private UserService $userService;
 
     public function __construct(Request $r)
     {
         parent::__construct($r);
 
-        $this->userDAO = new UserDAO();
+        $this->userService = new UserService();
     }
 
     public function setRules(): void
@@ -30,20 +31,11 @@ class AuthLoginValidator extends FormDataValidator
             'email' => ['required','email'],
             'password' => 'required|#max_char:100',
             '_generic_' => [function(&$requestData, &$errors, &$fenceUp){
-            
-                $u = $this->userDAO->getUserByEmail($requestData['email']);
+
+                $u = $this->userService->authenticate($requestData['email'], $requestData['password']);
 
                 if(!$u)
-                {
                     $errors->add('authentication_failure', "Provided credentials are incorrect");
-                    return;
-                }
-
-                if(!password_verify($requestData['password'], $u->password))
-                {
-                    $errors->add('authentication_failure', "Provided credentials are incorrect");
-                    return;
-                }
 
             }]
         ];
