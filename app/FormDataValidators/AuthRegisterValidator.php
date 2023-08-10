@@ -16,7 +16,7 @@ class AuthRegisterValidator extends FormDataValidator
         $this->rules = [
             'firstName' => 'required|min_char:2|max_char:50',
             'lastName' => 'required|min_char:2|max_char:50',
-            'email' => 'required|email|unique:users,email',
+            'email' => 'required|email|unique:accounts,username',
             'confirmPassword' => 'required|min_char:8|max_char:100',
             'password' => 'required|min_char:8|max_char:100|same:confirmPassword'
         ];

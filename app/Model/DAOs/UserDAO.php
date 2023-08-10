@@ -5,27 +5,68 @@ namespace App\Model\DAOs;
 
 
 use Dren\DAO;
-
+use Exception;
 
 
 class UserDAO extends DAO
 {
-    public function createNewUser(array $u) : int
+    /**
+     * @throws Exception
+     */
+    public function createNewUser(object $u) : int
     {
+        // use transaction when dealing with multiple queries that depend on the previous query's successful execution
+        try
+        {
+            $this->db->beginTransaction();
 
+            // create `accounts` record
+            $q1 = <<<EOT
+                INSERT INTO accounts (username, password, last_active, last_ip) VALUES (?, ?, ?, ?)
+            EOT;
 
-        return $this->db
-            ->query("INSERT INTO users(first_name, last_name, email, password) VALUES(?,?,?,?)", (array)$u)
-            ->exec();
+            $newUserId = $this->db
+                ->query($q1, [$u->email, $u->password, date("Y-m-d H:i:s"), $u->ip])
+                ->exec();
+
+            // create `user_profiles` record
+            $q2 = <<<EOT
+                INSERT INTO user_profiles (account_id, first_name, last_name, email) VALUES (?, ?, ?, ?)
+            EOT;
+
+            $this->db
+                ->query($q2, [$newUserId, $u->firstName, $u->lastName, $u->email])
+                ->exec();
+
+            // create account_role junction
+            $q3 = <<<EOT
+                INSERT INTO account_role (account_id, role_id) VALUES (?, ?)
+            EOT;
+
+            $this->db
+                ->query($q3, [$newUserId, 1])
+                ->exec();
+
+            $this->db->commitTransaction();
+
+            return $newUserId;
+        }
+        catch(Exception $e)
+        {
+            $this->db->rollbackTransaction();
+
+            throw new Exception($e->getMessage()); // handle further up the stack
+        }
+
     }
     public function getUserById(int $id) : ?object
     {
         $q = <<<EOT
-SELECT accounts.*, user_profiles.*
-FROM accounts
-JOIN user_profiles ON accounts.id = user_profiles.account_id
-WHERE accounts.id = ?
-EOT;
+            SELECT accounts.*, user_profiles.*
+            FROM accounts
+            JOIN user_profiles ON accounts.id = user_profiles.account_id
+            WHERE accounts.id = ?
+        EOT;
 
         return $this->db
             ->query($q, [$id])
@@ -36,11 +77,11 @@ EOT;
     public function getUserByUsername(string $username) : ?object
     {
         $q = <<<EOT
-SELECT accounts.*, user_profiles.*
-FROM accounts
-JOIN user_profiles ON accounts.id = user_profiles.account_id
-WHERE accounts.username = ?
-EOT;
+            SELECT accounts.*, user_profiles.*
+            FROM accounts
+            JOIN user_profiles ON accounts.id = user_profiles.account_id
+            WHERE accounts.username = ?
+        EOT;
 
         return $this->db
             ->query($q, [$username])
@@ -51,13 +92,14 @@ EOT;
     public function getRoles(int $userId): array
     {
         $q = <<<EOT
-SELECT 
-    roles.role
-FROM accounts
-JOIN account_role ON accounts.id = account_role.account_id
-JOIN roles ON account_role.role_id = roles.id
-WHERE accounts.id = ?;
-EOT;
+            SELECT 
+                roles.role
+            FROM accounts
+            JOIN account_role ON accounts.id = account_role.account_id
+            JOIN roles ON account_role.role_id = roles.id
+            WHERE accounts.id = ?;
+        EOT;
+
         $resultSet = $this->db
             ->query($q, [$userId])
             ->asObj()
@@ -87,19 +129,19 @@ EOT;
     public function getKeyValsWithNotes(int $id) : array
     {
         $query = <<<EOT
-        SELECT key_vals.*,
-        (
-        SELECT 
-            JSON_ARRAYAGG(
-                JSON_OBJECT('note', key_val_notes.note)
-            )
-        FROM 
-            key_val_notes
-        WHERE 
-            key_val_notes.key_val_id = key_vals.id
-        ) AS notes 
-        FROM key_vals 
-        WHERE user_id = ?
+            SELECT key_vals.*,
+            (
+            SELECT 
+                JSON_ARRAYAGG(
+                    JSON_OBJECT('note', key_val_notes.note)
+                )
+            FROM 
+                key_val_notes
+            WHERE 
+                key_val_notes.key_val_id = key_vals.id
+            ) AS notes 
+            FROM key_vals 
+            WHERE user_id = ?
         EOT;
 
         return $this->db

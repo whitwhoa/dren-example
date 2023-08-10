@@ -43,8 +43,14 @@ class AuthController extends Controller
      */
     public function registerSave() : Response
     {
-        $uid = $this->userService->createNewUser($this->request->getPostData());
-        $this->sessionManager->regenerate(true, $uid);
+        $params = $this->request->getPostData();
+        $params->ip = $this->request->getIp();
+
+        $uid = $this->userService->createNewUser($params);
+        $roles = $this->userDAO->getRoles($uid);
+
+        $this->sessionManager->upgradeSession($uid, $roles);
+
         return $this->response->redirect('/');
     }
 

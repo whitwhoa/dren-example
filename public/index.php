@@ -7,7 +7,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-//$start = microtime(true);
+$start = microtime(true);
 
 
 /* Set $privateDirectory equal to the path where you have installed the drencrom/private
@@ -33,6 +33,6 @@ require $privateDirectory . '/routes.php';
 
 
 
-//echo '<br/><br/>';
-//$end = microtime(true);
-//echo  $end - $start;
+echo '<br/><br/>';
+$end = microtime(true);
+echo  $end - $start;

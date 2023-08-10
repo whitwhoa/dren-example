@@ -1,6 +1,7 @@
 vendor
 cache/routes.php
 .idea
+storage/application.log
 storage/sessions/*
 !storage/sessions/.gitkeep
 
