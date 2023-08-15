@@ -9,16 +9,16 @@ use App\Model\DAOs\UserDAO;
 use App\Model\Services\UserService;
 use Dren\Request;
 use Dren\FormDataValidator;
-
+use Dren\SessionManager;
 
 
 class AuthLoginValidator extends FormDataValidator
 {
     private UserService $userService;
 
-    public function __construct(Request $r)
+    public function __construct(Request $r, SessionManager $sm)
     {
-        parent::__construct($r);
+        parent::__construct($r, $sm);
 
         $this->userService = new UserService();
     }
@@ -30,11 +30,14 @@ class AuthLoginValidator extends FormDataValidator
         $this->rules = [
             'email' => ['required','email'],
             'password' => 'required|#max_char:100',
-            '_generic_' => [function(&$requestData, &$errors, &$fenceUp){
+            // You can add callables to the rules array to create your own custom validation logic.
+            // If you want to create a custom callable to for example check user authentication, then
+            // you would simply create a key value entry where the key can be whatever you'd like that
+            // doesn't conflict with the rest of your rules (it won't be referenced anywhere), and the
+            // value follows the same function signature as below:
+            '_auth_check' => [function(&$requestData, &$errors, &$fenceUp){
 
-                $u = $this->userService->authenticate($requestData['email'], $requestData['password']);
-
-                if(!$u)
+                if(!$this->userService->authenticate($requestData['email'], $requestData['password']))
                     $errors->add('authentication_failure', "Provided credentials are incorrect");
 
             }]

@@ -1,9 +1,16 @@
 vendor
+
 cache/routes.php
+
 .idea
+
 storage/application.log
+
 storage/sessions/*
 !storage/sessions/.gitkeep
+
+storage/locks/ip/*
+!storage/locks/ip/.gitkeep
 
 storage/uploads/*
 !storage/uploads/.gitkeep

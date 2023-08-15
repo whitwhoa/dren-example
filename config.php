@@ -16,6 +16,8 @@ return (object)[
     // For example, you could use the following in an external script to generate your token:
     // bin2hex(random_bytes(32));
     'encryption_key' => 'd27ade1e569601dccedb3722c072b1629e2703a5bec65b636b21a62d7ad59be2',
+    'lockable_datastore_type' => 'file', // file (...or redis eventually), used for blocking routes and session data
+    'ip_param_name' => 'REMOTE_ADDR', // don't modify this unless you know that your server is receiving the client ip from a non-standard header
     'session' => (object)[
 
         'web_client_name' => 'session_id', // name of the cookie where session token is stored for web routes
@@ -73,7 +75,12 @@ return (object)[
         // the approximate percentage chance that the request runs the session garbage collector. With the default
         // settings of 1/100, there is approximately 1% chance of gc occurring
         'gc_probability' => 1,
-        'gc_divisor' => 100
+        'gc_divisor' => 100,
+
+        // Common cookie values to set for security reasons
+        'cookie_secure' => true,
+        'cookie_httponly' => true,
+        'cookie_samesite' => 'Lax'
 
     ],
     'databases'  => [

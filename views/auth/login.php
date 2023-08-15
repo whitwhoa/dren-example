@@ -12,14 +12,20 @@
             <h2>Login</h2>
             <hr/>
 
-            <?php if($errors->has('authentication_failure')): ?>
-            <div class="row">
-                <div class="col">
-                    <div class="alert alert-danger">
-                        <?php echo $errors->first('authentication_failure'); ?>
+
+
+            <?php if(isset($errors) && $errors->count() > 0): ?>
+                <div class="row">
+                    <div class="col">
+                        <div class="alert alert-danger">
+                            <ul>
+                                <?php foreach($errors->all() as $e): ?>
+                                    <li><?php echo $e; ?></li>
+                                <?php endforeach; ?>
+                            </ul>
+                        </div>
                     </div>
                 </div>
-            </div>
             <?php endif; ?>
 
             <div class="row">
