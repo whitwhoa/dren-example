@@ -4,61 +4,36 @@
 namespace App\Model\DAOs;
 
 
-use Dren\DAO;
+
+use Dren\Model\DAOs\AccountDAO;
+use Dren\MySQLCon;
 use Exception;
 
 
-class UserDAO extends DAO
+class UserDAO extends AccountDAO
 {
     /**
      * @throws Exception
      */
     public function createNewUser(object $u) : int
     {
-        // use transaction when dealing with multiple queries that depend on the previous query's successful execution
-        try
-        {
-            $this->db->beginTransaction();
+        $firstName = $u->firstName;
+        $lastName = $u->lastName;
+        $email = $u->email;
 
-            // create `accounts` record
-            $q1 = <<<EOT
-                INSERT INTO accounts (username, password, last_active, last_ip) VALUES (?, ?, ?, ?)
-            EOT;
+        return $this->createNewAccount($u->email, $u->password, $u->ip, ['user'],
+            function(int $accountId, MySQLCon $db) use($firstName, $lastName, $email){
 
-            $newUserId = $this->db
-                ->query($q1, [$u->email, $u->password, date("Y-m-d H:i:s"), $u->ip])
-                ->exec();
-
-            // create `user_profiles` record
-            $q2 = <<<EOT
+            $q = <<<EOT
                 INSERT INTO user_profiles (account_id, first_name, last_name, email) VALUES (?, ?, ?, ?)
             EOT;
 
             $this->db
-                ->query($q2, [$newUserId, $u->firstName, $u->lastName, $u->email])
+                ->query($q, [$accountId, $firstName, $lastName, $email])
                 ->exec();
-
-            // create account_role junction
-            $q3 = <<<EOT
-                INSERT INTO account_role (account_id, role_id) VALUES (?, ?)
-            EOT;
-
-            $this->db
-                ->query($q3, [$newUserId, 1])
-                ->exec();
-
-            $this->db->commitTransaction();
-
-            return $newUserId;
-        }
-        catch(Exception $e)
-        {
-            $this->db->rollbackTransaction();
-
-            throw new Exception($e->getMessage()); // handle further up the stack
-        }
-
+        });
     }
+
     public function getUserById(int $id) : ?object
     {
         $q = <<<EOT
@@ -89,29 +64,6 @@ class UserDAO extends DAO
             ->exec();
     }
 
-    public function getRoles(int $userId): array
-    {
-        $q = <<<EOT
-            SELECT 
-                roles.role
-            FROM accounts
-            JOIN account_role ON accounts.id = account_role.account_id
-            JOIN roles ON account_role.role_id = roles.id
-            WHERE accounts.id = ?;
-        EOT;
-
-        $resultSet = $this->db
-            ->query($q, [$userId])
-            ->asObj()
-            ->exec();
-
-        $roles = [];
-        foreach($resultSet as $r)
-            $roles[] = $r->role;
-
-        return $roles;
-    }
-
     public function getKeyVals(int $id) : array
     {
         return $this->db
@@ -140,14 +92,6 @@ class UserDAO extends DAO
 
         return $this->db
             ->query($query, [$id])
-            ->asObj()
-            ->exec();
-    }
-
-    public function getAllUsers() : array
-    {
-        return $this->db
-            ->query("SELECT * FROM users")
             ->asObj()
             ->exec();
     }
