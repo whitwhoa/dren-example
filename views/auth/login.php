@@ -59,6 +59,19 @@
             <div class="row">
                 <div class="col">
                     <div class="form-group">
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="remember" name="remember" value="true" checked="">
+                            <label class="form-check-label" for="optionCheckboxes1">
+                                Remember Me
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col">
+                    <div class="form-group">
                         <button type="submit" class="btn btn-primary w-100">Login</button>
                     </div>
                 </div>

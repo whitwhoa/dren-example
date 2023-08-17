@@ -112,12 +112,6 @@ class UserDAO extends DAO
         return $roles;
     }
 
-    public function emailExists(string $email) : bool
-    {
-        //return $this->getUserByEmail($email) != null;
-        return true;
-    }
-
     public function getKeyVals(int $id) : array
     {
         return $this->db

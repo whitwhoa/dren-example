@@ -30,6 +30,7 @@ class AuthLoginValidator extends FormDataValidator
         $this->rules = [
             'email' => ['required','email'],
             'password' => 'required|#max_char:100',
+            'remember' => 'sometimes|in:true',
             // You can add callables to the rules array to create your own custom validation logic.
             // If you want to create a custom callable to for example check user authentication, then
             // you would simply create a key value entry where the key can be whatever you'd like that
