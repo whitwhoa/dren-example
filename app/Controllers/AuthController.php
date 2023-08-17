@@ -8,7 +8,8 @@ use App\Model\DAOs\UserDAO;
 use App\Model\Services\UserService;
 use Dren\App;
 use Dren\Controller;
-use Dren\RememberIdAuthenticator;
+
+use Dren\RememberIdManager;
 use Dren\Response;
 use Exception;
 
@@ -17,7 +18,7 @@ class AuthController extends Controller
 {
     private UserDAO $userDAO;
     private UserService $userService;
-    private RememberIdAuthenticator $ridAuthenticator;
+    private RememberIdManager $ridManager;
 
     public function __construct()
     {
@@ -25,7 +26,7 @@ class AuthController extends Controller
 
         $this->userDAO = new UserDAO();
         $this->userService = new UserService();
-        $this->ridAuthenticator = App::get()->getRememberIdAuthenticator();
+        $this->ridManager = App::get()->getRememberIdManager();
 
     }
 
@@ -80,12 +81,15 @@ class AuthController extends Controller
      */
     public function loginSave() : Response
     {
+        //sleep(10);
+        //file_put_contents('/var/www/drencrom-test/storage/test.log', date('H:i:s', time()) . "\n", FILE_APPEND);
+
         // authentication handled in form data validator, so if we're here, we know we're good
         $u = $this->userDAO->getUserByUsername($this->request->getPostData()->email);
         $roles = $this->userDAO->getRoles($u->id);
 
         if(isset($this->request->getPostData()->remember) && $this->request->getPostData()->remember === 'true')
-            $this->ridAuthenticator->createNewRememberId($u->id);
+            $this->ridManager->createNewRememberId($u->id);
 
         $this->sessionManager->upgradeSession($u->id, $roles);
 
@@ -100,7 +104,17 @@ class AuthController extends Controller
      */
     public function logout() : Response
     {
-        $this->sessionManager->regenerate();
+        // if user has remember_id, remove it from database
+        // and send response to remove token from client
+        $this->ridManager->clearRememberId();
+
+        // send response to remove session_id from client, token stays on server until cleared by gc incase there
+        // are any concurrent requests in the queue, AND since we're currently blocking on this file we could delete
+        // it on unix systems and any concurrent requests waiting for locks would function just fine because of how
+        // unix handles file pointers, windows is a different story and we need this to work across platforms, thus...
+        // rely on gc.
+        $this->sessionManager->removeClientSessionId();
+
         return $this->response->redirect('/');
     }
 
