@@ -27,8 +27,8 @@ require $privateDirectory . '/routes.php';
 /* Bootstrap the application. Tell the Main method that we wish to perform processing of an
  * http request. Pass the $privateDirectory path into our Main class for further usage.
  *****************************************************************************************/
-\Dren\App::init($privateDirectory);
-\Dren\App::get()->execute();
+\Dren\App::initHttp($privateDirectory);
+\Dren\App::get()->executeHttp();
 
 
 

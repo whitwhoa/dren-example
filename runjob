@@ -1,0 +1,34 @@
+<?php
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// For development. Comment these out for production
+/////////////////////////////////////////////////////////////////////////////////////////
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+/////////////////////////////////////////////////////////////////////////////////////////
+
+$privateDirectory = __DIR__;
+require $privateDirectory . '/vendor/autoload.php';
+
+use Dren\App;
+use Dren\Logger;
+
+try
+{
+    App::initCli($privateDirectory);
+
+//    $db = App::get()->getDb();
+//    $results = $db->query("SELECT * FROM accounts")->asArray()->exec();
+//    echo var_export($results, true);
+
+//    $http = App::get()->getHttpClient();
+//    echo $http->setUrl('https://dummyjson.com/products/1')
+//        ->send()
+//        ->getResponse();
+
+}
+catch (Exception $e)
+{
+    Logger::write($e->getMessage() . ":" . $e->getTraceAsString());
+}
