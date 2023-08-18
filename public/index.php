@@ -7,12 +7,11 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
-$start = microtime(true);
+//$start = microtime(true);
 
 
 /* Set $privateDirectory equal to the path where you have installed the drencrom/private
- * directory. This path can be anywhere as long as the webserver has correct permissions.
- * Do not put this inside your public webserver directory for security reasons.
+ * directory. Do not put this inside your public webserver directory for security reasons.
  *****************************************************************************************/
 $privateDirectory = __DIR__ . '/..';
 
@@ -33,6 +32,6 @@ require $privateDirectory . '/routes.php';
 
 
 
-echo '<br/><br/>';
-$end = microtime(true);
-echo  $end - $start;
+//echo '<br/><br/>';
+//$end = microtime(true);
+//echo  $end - $start;
