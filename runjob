@@ -11,6 +11,7 @@ error_reporting(E_ALL);
 $privateDirectory = __DIR__;
 require $privateDirectory . '/vendor/autoload.php';
 
+
 use Dren\App;
 use Dren\Logger;
 
@@ -27,8 +28,69 @@ try
 //        ->send()
 //        ->getResponse();
 
+    if($argc > 1)
+    {
+//        foreach($argv as $v)
+//        {
+//            echo $v . "\n";
+//        }
+
+        // Just a single call to a single job, without passing data
+        if($argc === 2)
+        {
+            $className = '';
+            if(class_exists("App\\Jobs\\" . $argv[1]))
+                $className = "App\\Jobs\\" . $argv[1];
+            elseif(class_exists("Dren\\Jobs\\" . $argv[1]))
+                $className = "Dren\\Jobs\\" . $argv[1];
+
+            if($className === '')
+                throw new Exception("Provided classname: " . $argv[1] . " does not exist");
+
+            if(!(new $className())->run())
+                throw new Exception("Execution of job: " . $className . " failed");
+
+            exit(0);
+        }
+
+        // If we've made it here, this is either a call to a single job passing a string of data, or
+        // a call to multiple jobs each must contain a string of data, if no data necessary, an empty
+        // string must be provided
+        if($argc % 2 == 0)
+            throw new Exception("When calling multiple jobs with runjob command, total number of arguments must be odd");
+
+        $executionLog = [];
+        for ($i = 1; $i < $argc; $i += 2)
+        {
+            $className = '';
+            if(class_exists("App\\Jobs\\" . $argv[$i]))
+                $className = "App\\Jobs\\" . $argv[$i];
+            elseif(class_exists("Dren\\Jobs\\" . $argv[$i]))
+                $className = "Dren\\Jobs\\" . $argv[$i];
+
+            if($className === '')
+                throw new Exception("Provided classname: " . $argv[$i] . " does not exist");
+
+            $classData = $argv[$i+1];
+
+            if(!(new $className($classData))->run())
+            {
+                $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'failed'];
+                throw new Exception("Execution of aggregate job failed: " . json_encode($executionLog));
+            }
+
+            $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'success'];
+        }
+
+    }
 }
 catch (Exception $e)
 {
-    Logger::write($e->getMessage() . ":" . $e->getTraceAsString());
+    $message = $e->getMessage() . ":" . $e->getTraceAsString();
+    echo $message . "\n";
+    Logger::write($message);
+
+    // TODO: do we want to log these in the database?
+
+    exit(1);
 }
