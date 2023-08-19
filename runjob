@@ -19,22 +19,8 @@ try
 {
     App::initCli($privateDirectory);
 
-//    $db = App::get()->getDb();
-//    $results = $db->query("SELECT * FROM accounts")->asArray()->exec();
-//    echo var_export($results, true);
-
-//    $http = App::get()->getHttpClient();
-//    echo $http->setUrl('https://dummyjson.com/products/1')
-//        ->send()
-//        ->getResponse();
-
     if($argc > 1)
     {
-//        foreach($argv as $v)
-//        {
-//            echo $v . "\n";
-//        }
-
         // Just a single call to a single job, without passing data
         if($argc === 2)
         {
@@ -73,7 +59,7 @@ try
 
             $classData = $argv[$i+1];
 
-            if(!(new $className($classData))->run())
+            if(!(new $className(json_decode($classData)))->run())
             {
                 $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'failed'];
                 throw new Exception("Execution of aggregate job failed: " . json_encode($executionLog));

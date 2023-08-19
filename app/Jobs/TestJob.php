@@ -6,12 +6,6 @@ use Dren\Job;
 
 class TestJob extends Job
 {
-
-    function __construct(?string $data = null)
-    {
-        parent::__construct($data);
-    }
-
     public function preCondition(): bool
     {
         return true;
