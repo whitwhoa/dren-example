@@ -15,5 +15,8 @@ storage/locks/ip/*
 storage/locks/rid/*
 !storage/locks/rid/.gitkeep
 
+storage/locks/jobs/*
+!storage/locks/jobs/.gitkeep
+
 storage/uploads/*
 !storage/uploads/.gitkeep

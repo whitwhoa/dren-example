@@ -3,10 +3,13 @@
 namespace App\Jobs;
 
 use Dren\Job;
+use Dren\Jobs\SequentialJob;
 use Dren\Logger;
 
 class TestJob2 extends Job
 {
+    use SequentialJob;
+
     public function preCondition(): bool
     {
         return true;

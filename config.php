@@ -17,6 +17,7 @@ return (object)[
     // bin2hex(random_bytes(32));
     'encryption_key' => 'd27ade1e569601dccedb3722c072b1629e2703a5bec65b636b21a62d7ad59be2',
     'lockable_datastore_type' => 'file', // file (...or redis eventually), used for blocking routes and session data
+    'jobs_lockable_datastore_type' => 'file',
     'ip_param_name' => 'REMOTE_ADDR', // don't modify this unless you know that your server is receiving the client ip from a non-standard header
     'session' => (object)[
 
@@ -29,11 +30,6 @@ return (object)[
         'rid_mobile_client_name' => 'Remember-Id', // name of the custom http header used by mobile applications if so desired
 
         'directory' => '/storage/sessions', // this will be prepended with the value of $privateDirectory from index.php
-
-        // Directory in which we save lock files for remember_ids when they are being used to generate session_ids so
-        // that any concurrent requests will block until the first request has completed and use the updated session_id
-        // without regenerating another session_id. Will be prepended with value of $privateDirectory from index.php
-        'rid_lock_dir' => '/storage/rememberlocks',
 
         // This is the duration (in seconds) in which the session_id is allowed to live for before being re-issued
         // to the user
