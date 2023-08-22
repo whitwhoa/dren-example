@@ -15,70 +15,203 @@ require $privateDirectory . '/vendor/autoload.php';
 
 
 use Dren\App;
+use Dren\FileLockableDataStore;
+use Dren\Job;
+use Dren\LockableDataStore;
 use Dren\Logger;
+use Dren\Model\DAOs\JobDAO;
 
-try
+
+App::initCli($privateDirectory);
+$mutex = null;
+if(App::get()->getConfig()->jobs_lockable_datastore_type === 'file')
+    $mutex = new FileLockableDataStore(App::get()->getPrivateDir() . '/storage/locks/jobs');
+$jobDao = new JobDAO();
+$jobId = null;
+$executionId = null;
+
+function verifyClassName(string $name) : bool|string
 {
-    App::initCli($privateDirectory);
+    $className = '';
+    if(class_exists("App\\Jobs\\" . $name))
+        $className = "App\\Jobs\\" . $name;
+    elseif(class_exists("Dren\\Jobs\\" . $name))
+        $className = "Dren\\Jobs\\" . $name;
 
-    if($argc > 1)
+    if($className === '')
     {
-        // Just a single call to a single job, without passing data
-        if($argc === 2)
+        $message = "Provided classname: " . $name . " does not exist";
+        Logger::write($message);
+        echo $message . "\n";
+        return false;
+    }
+
+    return $className;
+}
+
+function verifyArgumentCount(int $argCount) : bool
+{
+    if($argCount % 2 == 0)
+    {
+        $message = "When calling multiple jobs with runjob command, total number of arguments must be odd";
+        Logger::write($message);
+        echo $message . "\n";
+        return false;
+    }
+
+    return true;
+}
+
+function handleJobException(Exception $e) : void
+{
+    global $mutex;
+    global $executionId;
+    global $jobDao;
+
+    $errorMessage = $e->getMessage() . ":" . $e->getTraceAsString();
+
+    if($executionId !== null)
+        $jobDao->updateJobExecution($executionId, date('Y-m-d H:i:s'), 'FAILED','FAILED', $errorMessage);
+    else
+        Logger::write($errorMessage);
+
+    $mutex->closeLock();
+    $mutex->deleteUnsafe();
+}
+
+/**
+ * @throws Exception
+ */
+function run(Job $j) : bool
+{
+    global $jobId;
+    global $mutex;
+    global $jobDao;
+    global $executionId;
+
+    if(!$j->preCondition())
+    {
+        $mutex->closeLock();
+        $mutex->deleteUnsafe();
+
+        return false;
+    }
+
+    $executionId = $jobDao->createJobExecution(getmypid(), $jobId, date('Y-m-d H:i:s'), 'RUNNING');
+    $mutex->overwriteContents($executionId);
+
+    $j->logic();
+
+    $jobDao->updateJobExecution($executionId, date('Y-m-d H:i:s'), 'COMPLETED', 'SUCCESS', $j->getSuccessMessage());
+
+    $mutex->closeLock();
+    $mutex->deleteUnsafe();
+
+    return true;
+}
+
+/**
+ * @throws Exception
+ */
+function runConcurrent(Job $j) : bool
+{
+    global $jobId;
+    global $mutex;
+
+    $jobId = $j->generateFilenameFromObject();
+
+    // append unique value to end of jobId since multiple can run at once
+    $kindaUniqueValue = time() . random_int(0, 9999);
+    $jobId = $jobId . '_' . $kindaUniqueValue;
+
+    $mutex->openLock($jobId);
+
+    return run($j);
+}
+
+/**
+ * @throws Exception
+ */
+function runSequential(Job $j) : bool
+{
+    global $jobId;
+    global $mutex;
+    global $jobDao;
+
+    $jobId = $j->generateFilenameFromObject();
+
+    if($mutex->idExists($jobId))
+    {
+        if(!$mutex->tryToLock($jobId))
         {
-            $className = '';
-            if(class_exists("App\\Jobs\\" . $argv[1]))
-                $className = "App\\Jobs\\" . $argv[1];
-            elseif(class_exists("Dren\\Jobs\\" . $argv[1]))
-                $className = "Dren\\Jobs\\" . $argv[1];
+            $message = "Job attempted to run while another instance of job was currently running: " . $jobId;
+            Logger::write($message);
+            echo $message . "\n";
+            return false; // unable to get lock so another process is doing something with this job, get out
+        }
 
-            if($className === '')
-                throw new Exception("Provided classname: " . $argv[1] . " does not exist");
+        $prevId = $mutex->getContents();
+        if($prevId != '')
+            $jobDao->updateJobExecution((int)$mutex->getContents(), date('Y-m-d H:i:s'),'FAILED', 'INTERRUPTED', null);
+    }
+    else
+    {
+        $mutex->openLock($jobId);
+    }
 
-            if(!(new $className())->run())
-                throw new Exception("Execution of job: " . $className . " failed");
+    return run($j);
+}
+
+
+if($argc > 1)
+{
+    // Just a single call to a single job, without passing data
+    if($argc === 2)
+    {
+        $className = verifyClassName($argv[1]);
+        if($className === false)
+            exit(1);
+
+        try
+        {
+            $job = new $className();
+
+            if($job->isConcurrent())
+                runConcurrent($job);
+            else
+                runSequential($job);
 
             exit(0);
         }
-
-        // If we've made it here, this is either a call to a single job passing a string of data, or
-        // a call to multiple jobs each must contain a string of data, if no data necessary, an empty
-        // string must be provided
-        if($argc % 2 == 0)
-            throw new Exception("When calling multiple jobs with runjob command, total number of arguments must be odd");
-
-        $executionLog = [];
-        for ($i = 1; $i < $argc; $i += 2)
+        catch(Exception $e)
         {
-            $className = '';
-            if(class_exists("App\\Jobs\\" . $argv[$i]))
-                $className = "App\\Jobs\\" . $argv[$i];
-            elseif(class_exists("Dren\\Jobs\\" . $argv[$i]))
-                $className = "Dren\\Jobs\\" . $argv[$i];
+            handleJobException($e);
+            exit(1);
+        }
+    }
 
-            if($className === '')
-                throw new Exception("Provided classname: " . $argv[$i] . " does not exist");
+    // If we've made it here, this is either a call to a single job passing a string of data, or a call to multiple jobs
+    // each must contain a string of data, if no data necessary, an empty string must be provided
+    verifyArgumentCount($argc);
 
-            $classData = $argv[$i+1];
+    // TODO: really have to think about how this is going to play out, I don't think we had it correct the first time
+    // either because we didn't really think about what happens whenever a preCondition fails
+    // UPDATE: if a preCondition fails, we return false indicating that the job did not execute it's logic() method successfully
+    $executionLog = [];
+    for ($i = 1; $i < $argc; $i += 2)
+    {
+        $className = verifyClassName($argv[1]);
+        if($className === false)
+            exit(1);
 
-            if(!(new $className(json_decode($classData)))->run())
-            {
-                $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'failed'];
-                throw new Exception("Execution of aggregate job failed: " . json_encode($executionLog));
-            }
+        $classData = $argv[$i+1];
 
-            $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'success'];
+        if(!(new $className(json_decode($classData)))->run())
+        {
+            $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'failed'];
+            throw new Exception("Execution of aggregate job failed: " . json_encode($executionLog));
         }
 
+        $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'success'];
     }
-}
-catch (Exception $e)
-{
-    $message = $e->getMessage() . ":" . $e->getTraceAsString();
-    echo $message . "\n";
-    Logger::write($message);
-
-    // TODO: do we want to log these in the database?
-
-    exit(1);
 }
