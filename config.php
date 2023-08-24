@@ -11,7 +11,6 @@
 return (object)[
     'app_name' => 'test',
     'display_errors' => true,
-    'log_file' => '/storage/application.log',
     // 32 byte or more cryptographically secure secret that is not known to anyone but your application
     // For example, you could use the following in an external script to generate your token:
     // bin2hex(random_bytes(32));
@@ -29,7 +28,7 @@ return (object)[
 
         'rid_mobile_client_name' => 'Remember-Id', // name of the custom http header used by mobile applications if so desired
 
-        'directory' => '/storage/sessions', // this will be prepended with the value of $privateDirectory from index.php
+        'directory' => __DIR__ . '/storage/sessions',
 
         // This is the duration (in seconds) in which the session_id is allowed to live for before being re-issued
         // to the user

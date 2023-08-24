@@ -3,12 +3,14 @@
 namespace App\Jobs;
 
 use Dren\Job;
+use Dren\Jobs\ConcurrentJob;
 use Dren\Jobs\SequentialJob;
 use Dren\Logger;
 
 class TestJob extends Job
 {
     use SequentialJob;
+    //use ConcurrentJob;
 
     public function preCondition(): bool
     {
@@ -22,7 +24,15 @@ class TestJob extends Job
 
         //file_put_contents('/var/www/drencrom-test/test.log', $stringVar, FILE_APPEND);
 
-        Logger::write($stringVar);
+        //Logger::write($stringVar);
+
+        echo $stringVar;
+
+        //undefinedFunctionCall();
+
+        //throw new \Exception("This is an exception thrown from the logic method of TestJob");
+
+        sleep(30);
 
     }
 }

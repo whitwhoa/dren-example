@@ -9,7 +9,7 @@ class Scheduler extends JobScheduler
 
     public function schedule(): void
     {
-        //$this->addJob('* * * * *', 'TestJob2', ['TestJob Data One', 'TestJob Data Two']);
+        //$this->addJob('* * * * *', 'TestJob', ['TestJob Data One', 'TestJob Data Two']);
 
 //        $this->addAggregateJob('* * * * *', [
 //            [

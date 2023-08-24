@@ -3,11 +3,11 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 // For development. Comment these out for production
 /////////////////////////////////////////////////////////////////////////////////////////
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
-ini_set('log_errors', 1);
-ini_set('error_log', '/var/www/drencrom-test/job_errors.log');
+//ini_set('log_errors', 1);
+//ini_set('error_log', '/var/www/drencrom-test/job_errors.log');
 /////////////////////////////////////////////////////////////////////////////////////////
 
 $privateDirectory = __DIR__;
@@ -41,7 +41,7 @@ function verifyClassName(string $name) : bool|string
     if($className === '')
     {
         $message = "Provided classname: " . $name . " does not exist";
-        Logger::write($message);
+        Logger::error($message);
         echo $message . "\n";
         return false;
     }
@@ -54,7 +54,7 @@ function verifyArgumentCount(int $argCount) : bool
     if($argCount % 2 == 0)
     {
         $message = "When calling multiple jobs with runjob command, total number of arguments must be odd";
-        Logger::write($message);
+        Logger::error($message);
         echo $message . "\n";
         return false;
     }
@@ -62,18 +62,16 @@ function verifyArgumentCount(int $argCount) : bool
     return true;
 }
 
-function handleJobException(Exception $e) : void
+function handleJobFailure(string $errorMessage) : void
 {
     global $mutex;
     global $executionId;
     global $jobDao;
 
-    $errorMessage = $e->getMessage() . ":" . $e->getTraceAsString();
-
     if($executionId !== null)
         $jobDao->updateJobExecution($executionId, date('Y-m-d H:i:s'), 'FAILED','FAILED', $errorMessage);
     else
-        Logger::write($errorMessage);
+        Logger::error($errorMessage);
 
     $mutex->closeLock();
     $mutex->deleteUnsafe();
@@ -144,15 +142,15 @@ function runSequential(Job $j) : bool
     {
         if(!$mutex->tryToLock($jobId))
         {
-            $message = "Job attempted to run while another instance of job was currently running: " . $jobId;
-            Logger::write($message);
+            $message = "Sequential Job attempted to run while another instance of job was currently running: " . $jobId;
+            Logger::warning($message);
             echo $message . "\n";
             return false; // unable to get lock so another process is doing something with this job, get out
         }
 
         $prevId = $mutex->getContents();
         if($prevId != '')
-            $jobDao->updateJobExecution((int)$mutex->getContents(), date('Y-m-d H:i:s'),'FAILED', 'INTERRUPTED', null);
+            $jobDao->updateJobExecution((int)$prevId, date('Y-m-d H:i:s'),'FAILED', 'INTERRUPTED', null);
     }
     else
     {
@@ -163,8 +161,24 @@ function runSequential(Job $j) : bool
 }
 
 
+
 if($argc > 1)
 {
+    // Register a shutdown function which will check for errors, and log them appropriately. This is the whole reason
+    // we have structured this script the way we have with globals. We want to be able to register only one shutdown
+    // function and have it reference the variables which will be updated by the jobs that run, thus the shutdown
+    // function can log errors hit by the last running job
+    register_shutdown_function(function(){
+
+        $error = error_get_last();
+        if ($error !== null)
+        {
+            handleJobFailure(var_export($error, true));
+            exit(1);
+        }
+
+    });
+
     // Just a single call to a single job, without passing data
     if($argc === 2)
     {
@@ -185,7 +199,7 @@ if($argc > 1)
         }
         catch(Exception $e)
         {
-            handleJobException($e);
+            handleJobFailure($e->getMessage() . ":" . $e->getTraceAsString());
             exit(1);
         }
     }
@@ -194,24 +208,50 @@ if($argc > 1)
     // each must contain a string of data, if no data necessary, an empty string must be provided
     verifyArgumentCount($argc);
 
-    // TODO: really have to think about how this is going to play out, I don't think we had it correct the first time
-    // either because we didn't really think about what happens whenever a preCondition fails
-    // UPDATE: if a preCondition fails, we return false indicating that the job did not execute it's logic() method successfully
-    $executionLog = [];
+    // loop through all the class names in the aggregate and confirm valid before proceeding. This allows us to not execute
+    // any of the aggregate jobs if a bad job name is provided for any of them
+    $agClassNames = [];
+    $agData = [];
     for ($i = 1; $i < $argc; $i += 2)
     {
-        $className = verifyClassName($argv[1]);
-        if($className === false)
+        $className = verifyClassName($argv[$i]);
+        if ($className === false)
             exit(1);
 
-        $classData = $argv[$i+1];
+        $agClassNames[] = $className;
+        $agData[] = $argv[$i+1];
+    }
 
-        if(!(new $className(json_decode($classData)))->run())
+    // Execute each job
+    try
+    {
+        $executionLog = [];
+        for ($i = 0; $i < count($agClassNames); $i++)
         {
-            $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'failed'];
-            throw new Exception("Execution of aggregate job failed: " . json_encode($executionLog));
-        }
+            $className = $agClassNames[$i];
+            $classData = $agData[$i];
 
-        $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'success'];
+            $job = new $className(json_decode($classData));
+
+            $jobRunStatus = false;
+            if($job->isConcurrent())
+                $jobRunStatus = runConcurrent($job);
+            else
+                $jobRunStatus = runSequential($job);
+
+            if(!$jobRunStatus)
+            {
+                $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'failed'];
+                if(count($executionLog) > 1)
+                    throw new Exception("Execution of aggregate job failed: " . json_encode($executionLog));
+            }
+
+            $executionLog[] = ["job" => $className, "data" => $classData, "status" => 'success'];
+        }
+    }
+    catch(Exception $e)
+    {
+        handleJobFailure($e->getMessage() . ":" . $e->getTraceAsString());
+        exit(1);
     }
 }

@@ -5,6 +5,7 @@ cache/routes.php
 .idea
 
 storage/application.log
+storage/job.log
 
 storage/sessions/*
 !storage/sessions/.gitkeep
