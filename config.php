@@ -19,21 +19,14 @@ return (object)[
     'jobs_lockable_datastore_type' => 'file',
     'ip_param_name' => 'REMOTE_ADDR', // don't modify this unless you know that your server is receiving the client ip from a non-standard header
     'session' => (object)[
-
         'web_client_name' => 'session_id', // name of the cookie where session token is stored for web routes
-
         'mobile_client_name' => 'Session-Id', // name of the custom http header used by mobile applications if so desired
-
         'rid_web_client_name' => 'remember_id', // name of cookie where remember token is stored for web routes if utilized
-
         'rid_mobile_client_name' => 'Remember-Id', // name of the custom http header used by mobile applications if so desired
-
         'directory' => __DIR__ . '/storage/system/sessions',
-
         // This is the duration (in seconds) in which the session_id is allowed to live for before being re-issued
         // to the user
         'valid_for' => 300, // 5min
-
         // The duration (in seconds) which a session_id remains active after having been re-issued to the user. This
         // mitigates issues where a user might have a bad connection and a new token is issued, but the response is
         // dropped. It also mitigates issues with race conditions where multiple requests could be in flight at the same
@@ -45,7 +38,6 @@ return (object)[
         // this 'new_token' field in its data store before attempting to re-issue the token. If it exists, the
         // new token is used.
         'liminal_time' => 60,
-
         // The amount of time (in seconds) a user is allowed to be inactive before their session expires, requiring them
         // to re-authenticate via either username/password or remember_id token. This differs from 'valid_for'.
         // 'valid_for' is concerned with how long any token can be used whether the user is inactive or active for
@@ -61,22 +53,28 @@ return (object)[
         // property) within this amount of time will be deleted from the filesystem whenever the garbage collector is
         // run
         'allowed_inactivity' => 1200,
-
         // Whether to run the session_id garbage collector or not. If you want to handle session garbage collection via
         // external means such as a background job, set this to false, and the rest of the gc parameters will be ignored
         'use_garbage_collector' => true,
-
         // These properties work together whenever 'use_garbage_collector' is set to true. They are used to determine
         // the approximate percentage chance that the request runs the session garbage collector. With the default
         // settings of 1/100, there is approximately 1% chance of gc occurring
         'gc_probability' => 1,
         'gc_divisor' => 100,
-
         // Common cookie values to set for security reasons
         'cookie_secure' => true,
         'cookie_httponly' => true,
         'cookie_samesite' => 'Lax'
-
+    ],
+    'queue' => [
+        'use_worker_queue' => true,
+        'queue_workers' => 2,
+        'queue_worker_lifetime' => 3600, // time in seconds, default to 1hr
+        'mem_before_restart' => 100 // how much memory to allow a worker process to consume before it's restarted by the
+                                    // process manager, this insures we don't leak memory, note this is not the max
+                                    // allowed memory for the process, that's in the .ini, a process could exceed this
+                                    // value, and complete successfully, but when the manager runs on the next cycle,
+                                    // it will respawn the process
     ],
     'databases'  => [
         // Multiple database connections allowed, but first database in list must always be the default database,
