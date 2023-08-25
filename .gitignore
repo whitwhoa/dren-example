@@ -4,20 +4,20 @@ cache/routes.php
 
 .idea
 
-storage/application.log
-storage/job.log
+storage/system/logs/application.log
+storage/system/logs/job.log
 
-storage/sessions/*
-!storage/sessions/.gitkeep
+storage/system/sessions/*
+!storage/system/sessions/.gitkeep
 
-storage/locks/ip/*
-!storage/locks/ip/.gitkeep
+storage/system/locks/ip/*
+!storage/system/locks/ip/.gitkeep
 
-storage/locks/rid/*
-!storage/locks/rid/.gitkeep
+storage/system/locks/rid/*
+!storage/system/locks/rid/.gitkeep
 
-storage/locks/jobs/*
-!storage/locks/jobs/.gitkeep
+storage/system/locks/jobs/*
+!storage/system/locks/jobs/.gitkeep
 
 storage/uploads/*
 !storage/uploads/.gitkeep

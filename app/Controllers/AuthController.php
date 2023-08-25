@@ -81,9 +81,6 @@ class AuthController extends Controller
      */
     public function loginSave() : Response
     {
-        //sleep(10);
-        //file_put_contents('/var/www/drencrom-test/storage/test.log', date('H:i:s', time()) . "\n", FILE_APPEND);
-
         // authentication handled in form data validator, so if we're here, we know we're good
         $u = $this->userDAO->getUserByUsername($this->request->getPostData()->email);
         $roles = $this->userDAO->getRoles($u->id);

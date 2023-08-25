@@ -7,6 +7,7 @@ ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
 error_reporting(E_ALL);
 
+//$start_memory = memory_get_usage();
 //$start = microtime(true);
 
 
@@ -35,3 +36,7 @@ require $privateDirectory . '/routes.php';
 //echo '<br/><br/>';
 //$end = microtime(true);
 //echo  $end - $start;
+//echo "<br/>";
+//$end_memory = memory_get_usage();
+//$used_memory = ($end_memory - $start_memory) / (1024 * 1024);
+//echo "memory used: " . $used_memory . "MB<br/>";

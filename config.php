@@ -28,7 +28,7 @@ return (object)[
 
         'rid_mobile_client_name' => 'Remember-Id', // name of the custom http header used by mobile applications if so desired
 
-        'directory' => __DIR__ . '/storage/sessions',
+        'directory' => __DIR__ . '/storage/system/sessions',
 
         // This is the duration (in seconds) in which the session_id is allowed to live for before being re-issued
         // to the user
