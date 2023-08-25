@@ -17,7 +17,6 @@ require $privateDirectory . '/vendor/autoload.php';
 use Dren\App;
 use Dren\FileLockableDataStore;
 use Dren\Job;
-use Dren\LockableDataStore;
 use Dren\Logger;
 use Dren\Model\DAOs\JobDAO;
 
@@ -95,12 +94,21 @@ function run(Job $j) : bool
         return false;
     }
 
-    $executionId = $jobDao->createJobExecution(getmypid(), $jobId, date('Y-m-d H:i:s'), 'RUNNING');
-    $mutex->overwriteContents($executionId);
+    $executionId = null;
+    if($j->shouldTrackExecution())
+    {
+        $executionId = $jobDao->createJobExecution(getmypid(), $jobId, date('Y-m-d H:i:s'), 'RUNNING');
+        $mutex->overwriteContents($executionId);
+    }
+    else
+    {
+        $mutex->overwriteContents('');
+    }
 
     $j->logic();
 
-    $jobDao->updateJobExecution($executionId, date('Y-m-d H:i:s'), 'COMPLETED', 'SUCCESS', $j->getSuccessMessage());
+    if($j->shouldTrackExecution())
+        $jobDao->updateJobExecution($executionId, date('Y-m-d H:i:s'), 'COMPLETED', 'SUCCESS', $j->getSuccessMessage());
 
     $mutex->closeLock();
     $mutex->deleteUnsafe();

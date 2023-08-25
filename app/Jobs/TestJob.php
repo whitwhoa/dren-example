@@ -19,6 +19,8 @@ class TestJob extends Job
 
     public function logic(): void
     {
+        $this->successMessage = "I was successful";
+
         $stringVar = "I am being printed from the logic method of the TestJob class\n";
         $stringVar .= "Here is the contents of my data property: " . var_export($this->data, true) . "\n";
 
