@@ -15,182 +15,17 @@ require $privateDirectory . '/vendor/autoload.php';
 
 
 use Dren\App;
-use Dren\FileLockableDataStore;
-use Dren\Job;
-use Dren\Logger;
-use Dren\Model\DAOs\JobDAO;
-
+use Dren\JobExecutor;
 
 App::initCli($privateDirectory);
-$mutex = null;
-if(App::get()->getConfig()->jobs_lockable_datastore_type === 'file')
-    $mutex = new FileLockableDataStore(App::get()->getPrivateDir() . '/storage/locks/jobs');
-$jobDao = new JobDAO();
-$jobId = null;
-$executionId = null;
-
-function verifyClassName(string $name) : bool|string
-{
-    $className = '';
-    if(class_exists("App\\Jobs\\" . $name))
-        $className = "App\\Jobs\\" . $name;
-    elseif(class_exists("Dren\\Jobs\\" . $name))
-        $className = "Dren\\Jobs\\" . $name;
-
-    if($className === '')
-    {
-        $message = "Provided classname: " . $name . " does not exist";
-        Logger::error($message);
-        echo $message . "\n";
-        return false;
-    }
-
-    return $className;
-}
-
-function verifyArgumentCount(int $argCount) : bool
-{
-    if($argCount % 2 == 0)
-    {
-        $message = "When calling multiple jobs with runjob command, total number of arguments must be odd";
-        Logger::error($message);
-        echo $message . "\n";
-        return false;
-    }
-
-    return true;
-}
-
-function handleJobFailure(string $errorMessage) : void
-{
-    global $mutex;
-    global $executionId;
-    global $jobDao;
-
-    if($executionId !== null)
-        $jobDao->updateJobExecution($executionId, date('Y-m-d H:i:s'), 'FAILED','FAILED', $errorMessage);
-    else
-        Logger::error($errorMessage);
-
-    $mutex->closeLock();
-    $mutex->deleteUnsafe();
-}
-
-/**
- * @throws Exception
- */
-function run(Job $j) : bool
-{
-    global $jobId;
-    global $mutex;
-    global $jobDao;
-    global $executionId;
-
-    if(!$j->preCondition())
-    {
-        $mutex->closeLock();
-        $mutex->deleteUnsafe();
-
-        return false;
-    }
-
-    $executionId = null;
-    if($j->shouldTrackExecution())
-    {
-        $executionId = $jobDao->createJobExecution(getmypid(), $jobId, date('Y-m-d H:i:s'), 'RUNNING');
-        $mutex->overwriteContents($executionId);
-    }
-    else
-    {
-        $mutex->overwriteContents('');
-    }
-
-    $j->logic();
-
-    if($j->shouldTrackExecution())
-        $jobDao->updateJobExecution($executionId, date('Y-m-d H:i:s'), 'COMPLETED', 'SUCCESS', $j->getSuccessMessage());
-
-    $mutex->closeLock();
-    $mutex->deleteUnsafe();
-
-    return true;
-}
-
-/**
- * @throws Exception
- */
-function runConcurrent(Job $j) : bool
-{
-    global $jobId;
-    global $mutex;
-
-    $jobId = $j->generateFilenameFromObject();
-
-    // append unique value to end of jobId since multiple can run at once
-    $kindaUniqueValue = time() . random_int(0, 9999);
-    $jobId = $jobId . '_' . $kindaUniqueValue;
-
-    $mutex->openLock($jobId);
-
-    return run($j);
-}
-
-/**
- * @throws Exception
- */
-function runSequential(Job $j) : bool
-{
-    global $jobId;
-    global $mutex;
-    global $jobDao;
-
-    $jobId = $j->generateFilenameFromObject();
-
-    if($mutex->idExists($jobId))
-    {
-        if(!$mutex->tryToLock($jobId))
-        {
-            $message = "Sequential Job attempted to run while another instance of job was currently running: " . $jobId;
-            Logger::warning($message);
-            echo $message . "\n";
-            return false; // unable to get lock so another process is doing something with this job, get out
-        }
-
-        $prevId = $mutex->getContents();
-        if($prevId != '')
-            $jobDao->updateJobExecution((int)$prevId, date('Y-m-d H:i:s'),'FAILED', 'INTERRUPTED', null);
-    }
-    else
-    {
-        $mutex->openLock($jobId);
-    }
-
-    return run($j);
-}
-
-
+$jobExecutor = new JobExecutor();
 
 if($argc > 1)
 {
-    // Register a shutdown function which will check for errors, and log them appropriately. This is the whole reason
-    // we have structured this script the way we have with globals. We want to be able to register only one shutdown
-    // function and have it reference the variables which will be updated by the jobs that run, thus the shutdown
-    // function can log errors hit by the last running job
-    register_shutdown_function(function(){
-
-        $error = error_get_last();
-        if ($error !== null)
-        {
-            handleJobFailure(var_export($error, true));
-            exit(1);
-        }
-
-    });
-
-    // Just a single call to a single job, without passing data
+    // Single call to a single job, without passing data
     if($argc === 2)
     {
-        $className = verifyClassName($argv[1]);
+        $className = $jobExecutor->verifyClassName($argv[1]);
         if($className === false)
             exit(1);
 
@@ -199,22 +34,22 @@ if($argc > 1)
             $job = new $className();
 
             if($job->isConcurrent())
-                runConcurrent($job);
+                $jobExecutor->runConcurrent($job);
             else
-                runSequential($job);
+                $jobExecutor->runSequential($job);
 
             exit(0);
         }
         catch(Exception $e)
         {
-            handleJobFailure($e->getMessage() . ":" . $e->getTraceAsString());
+            $jobExecutor->handleJobFailure($e->getMessage() . ":" . $e->getTraceAsString());
             exit(1);
         }
     }
 
     // If we've made it here, this is either a call to a single job passing a string of data, or a call to multiple jobs
     // each must contain a string of data, if no data necessary, an empty string must be provided
-    verifyArgumentCount($argc);
+    $jobExecutor->verifyArgumentCount($argc);
 
     // loop through all the class names in the aggregate and confirm valid before proceeding. This allows us to not execute
     // any of the aggregate jobs if a bad job name is provided for any of them
@@ -222,7 +57,7 @@ if($argc > 1)
     $agData = [];
     for ($i = 1; $i < $argc; $i += 2)
     {
-        $className = verifyClassName($argv[$i]);
+        $className = $jobExecutor->verifyClassName($argv[$i]);
         if ($className === false)
             exit(1);
 
@@ -243,9 +78,9 @@ if($argc > 1)
 
             $jobRunStatus = false;
             if($job->isConcurrent())
-                $jobRunStatus = runConcurrent($job);
+                $jobRunStatus = $jobExecutor->runConcurrent($job);
             else
-                $jobRunStatus = runSequential($job);
+                $jobRunStatus = $jobExecutor->runSequential($job);
 
             if(!$jobRunStatus)
             {
@@ -259,7 +94,7 @@ if($argc > 1)
     }
     catch(Exception $e)
     {
-        handleJobFailure($e->getMessage() . ":" . $e->getTraceAsString());
+        $jobExecutor->handleJobFailure($e->getMessage() . ":" . $e->getTraceAsString());
         exit(1);
     }
 }

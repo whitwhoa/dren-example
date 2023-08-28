@@ -19,5 +19,8 @@ storage/system/locks/rid/*
 storage/system/locks/jobs/*
 !storage/system/locks/jobs/.gitkeep
 
+storage/system/queue/*
+!storage/system/queue/.gitkeep
+
 storage/uploads/*
 !storage/uploads/.gitkeep

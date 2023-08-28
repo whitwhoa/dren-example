@@ -1,0 +1,63 @@
+<?php
+
+/////////////////////////////////////////////////////////////////////////////////////////
+// For development. Comment these out for production
+/////////////////////////////////////////////////////////////////////////////////////////
+//ini_set('display_errors', 1);
+//ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+//ini_set('log_errors', 1);
+//ini_set('error_log', '/var/www/drencrom-test/job_errors.log');
+/////////////////////////////////////////////////////////////////////////////////////////
+
+$privateDirectory = __DIR__;
+require $privateDirectory . '/vendor/autoload.php';
+
+use Dren\App;
+use Dren\DAOs\JobDAO;
+use Dren\JobExecutor;
+
+if ($argc < 2 || !is_numeric($argv[1]))
+    die("Must provide an integer argument.\n");
+
+$workerId = (int)$argv[1];
+
+App::initCli($privateDirectory);
+$jobExecutor = new JobExecutor();
+$jobDao = new JobDAO();
+
+while (true)
+{
+    //file_put_contents(__DIR__ . "/testWorker.txt", date('m/d/Y H:i:s') . " - " . $workerId . "\n", FILE_APPEND);
+
+    try
+    {
+        $queuedJobs = $jobDao->getQueuedJobs($workerId);
+
+        foreach($queuedJobs as $j)
+        {
+            $className = $jobExecutor->verifyClassName($j->name);
+            if($className === false)
+                throw new Exception('Invalid class name provided for job in worker queue');
+
+            $jobData = $j->data !== null ? json_decode($j->data) : null;
+
+            $job = new $className($jobData);
+
+            if($job->isConcurrent())
+                $jobExecutor->runConcurrent($job);
+            else
+                $jobExecutor->runSequential($job);
+
+            // TODO: remove record form job_queue, BUT we just realized that we need to make modifications so we
+            // include data in the job_executions table whenever a job fails that contained data
+
+        }
+    }
+    catch(Exception $e)
+    {
+        $jobExecutor->handleJobFailure($e->getMessage() . ":" . $e->getTraceAsString());
+    }
+
+    sleep(10);
+}

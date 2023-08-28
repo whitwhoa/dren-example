@@ -23,7 +23,7 @@ class TestJob2 extends Job
         $stringVar = "I am being printed from the logic method of the TestJob2 class\n";
         $stringVar .= "Here is the contents of my data property: " . var_export($this->data, true) . "\n";
         
-        //Logger::write($stringVar);
+        Logger::write($stringVar);
 
 
         //sleep(20);

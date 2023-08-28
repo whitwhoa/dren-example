@@ -8,11 +8,11 @@
     "packages": [
         {
             "name": "whitwhoa/drencrom",
-            "version": "dev-main",
+            "version": "dev-jobs_implementation",
             "dist": {
                 "type": "path",
                 "url": "/development/drencrom",
-                "reference": "321302c2cbff966cdf23e46beec16b3a73dbd9a4"
+                "reference": "28ef20b85a4c8dcff6cd9a8e263e1cca3ddf55eb"
             },
             "require": {
                 "ext-curl": "*",
@@ -21,10 +21,13 @@
                 "ext-pdo": "*",
                 "php": ">=8.1.0"
             },
+            "suggest": {
+                "ext-redis": "Required for RedisSessionManager"
+            },
             "type": "library",
             "autoload": {
                 "files": [
-                    "src/Dren/functions.php"
+                    "src/functions.php"
                 ],
                 "psr-4": {
                     "Dren\\": "src/Dren"

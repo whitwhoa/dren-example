@@ -3,9 +3,7 @@
 namespace App\Jobs;
 
 use Dren\Job;
-use Dren\Jobs\ConcurrentJob;
 use Dren\Jobs\SequentialJob;
-use Dren\Logger;
 
 class TestJob extends Job
 {
@@ -30,11 +28,16 @@ class TestJob extends Job
 
         echo $stringVar;
 
+        echo "Running TestJob\n";
+
+//        $testJob2Data = (object)['d1' => 4000, 'd2' => "some string value x4"];
+//        (new TestJob2($testJob2Data))->queue();
+
         //undefinedFunctionCall();
 
         //throw new \Exception("This is an exception thrown from the logic method of TestJob");
 
-        sleep(30);
+        //sleep(30);
 
     }
 }
