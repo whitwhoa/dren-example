@@ -1,11 +1,11 @@
 <?php
 
 
-namespace App\Model\DAOs;
+namespace App\DAOs;
 
 
 
-use Dren\Model\DAOs\AccountDAO;
+use Dren\DAOs\AccountDAO;
 use Dren\MySQLCon;
 use Exception;
 

@@ -1,10 +1,10 @@
 <?php
 
 
-namespace App\Model\Services;
+namespace App\Services;
 
 
-use App\Model\DAOs\UserDAO;
+use App\DAOs\UserDAO;
 use Dren\Service;
 use Exception;
 

@@ -5,8 +5,8 @@ namespace App\FormDataValidators;
 
 
 
-use App\Model\DAOs\UserDAO;
-use App\Model\Services\UserService;
+use App\DAOs\UserDAO;
+use App\Services\UserService;
 use Dren\Request;
 use Dren\FormDataValidator;
 use Dren\SessionManager;

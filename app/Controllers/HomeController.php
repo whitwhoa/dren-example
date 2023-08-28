@@ -5,7 +5,7 @@ namespace App\Controllers;
 
 
 
-use App\Model\DAOs\UserDAO;
+use App\DAOs\UserDAO;
 
 use Dren\App;
 use Dren\Controller;
