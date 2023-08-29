@@ -28,8 +28,6 @@ $jobDao = new JobDAO();
 
 while (true)
 {
-    //file_put_contents(__DIR__ . "/testWorker.txt", date('m/d/Y H:i:s') . " - " . $workerId . "\n", FILE_APPEND);
-
     try
     {
         $queuedJobs = $jobDao->getQueuedJobs($workerId);
@@ -51,6 +49,7 @@ while (true)
 
             // TODO: remove record form job_queue, BUT we just realized that we need to make modifications so we
             // include data in the job_executions table whenever a job fails that contained data
+            $jobDao->deleteJobQueue($j->id);
 
         }
     }

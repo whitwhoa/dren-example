@@ -69,12 +69,7 @@ return (object)[
     'queue' => (object)[
         'use_worker_queue' => true,
         'queue_workers' => 2,
-        'queue_worker_lifetime' => 3600, // time in seconds, default to 1hr
-        'mem_before_restart' => 100, // how much memory to allow a worker process to consume before it's restarted by the
-                                    // process manager, this insures we don't leak memory, note this is not the max
-                                    // allowed memory for the process, that's in the .ini, a process could exceed this
-                                    // value, and complete successfully, but when the manager runs on the next cycle,
-                                    // it will respawn the process
+        'queue_worker_lifetime' => 60, // time in seconds, default to 1hr
         'lockable_datastore_type' => 'file'
     ],
     'databases'  => [

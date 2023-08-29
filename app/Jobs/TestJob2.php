@@ -3,12 +3,14 @@
 namespace App\Jobs;
 
 use Dren\Job;
+use Dren\Jobs\ConcurrentJob;
 use Dren\Jobs\SequentialJob;
 use Dren\Logger;
 
 class TestJob2 extends Job
 {
-    use SequentialJob;
+    //use SequentialJob;
+    use ConcurrentJob;
 
     public function preCondition(): bool
     {
@@ -22,12 +24,14 @@ class TestJob2 extends Job
         //throw new \Exception("I am an exception being thrown from TestJob2");
         $stringVar = "I am being printed from the logic method of the TestJob2 class\n";
         $stringVar .= "Here is the contents of my data property: " . var_export($this->data, true) . "\n";
-        
-        Logger::write($stringVar);
 
+        //Logger::write($stringVar);
 
-        //sleep(20);
-
+        echo "--------------------------------\n";
         echo $stringVar;
+
+        sleep(10);
+
+        //echo $stringVar;
     }
 }
