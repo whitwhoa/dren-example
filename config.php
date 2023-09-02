@@ -8,7 +8,7 @@
  *
  * */
 
-return (object)[
+return [
     'app_name' => 'test',
     'display_errors' => true,
     // 32 byte or more cryptographically secure secret that is not known to anyone but your application
@@ -18,7 +18,7 @@ return (object)[
     'lockable_datastore_type' => 'file', // file (...or redis eventually), used for blocking routes and session data
     'jobs_lockable_datastore_type' => 'file',
     'ip_param_name' => 'REMOTE_ADDR', // don't modify this unless you know that your server is receiving the client ip from a non-standard header
-    'session' => (object)[
+    'session' => [
         'web_client_name' => 'session_id', // name of the cookie where session token is stored for web routes
         'mobile_client_name' => 'Session-Id', // name of the custom http header used by mobile applications if so desired
         'rid_web_client_name' => 'remember_id', // name of cookie where remember token is stored for web routes if utilized
@@ -66,7 +66,7 @@ return (object)[
         'cookie_httponly' => true,
         'cookie_samesite' => 'Lax'
     ],
-    'queue' => (object)[
+    'queue' => [
         'use_worker_queue' => true,
         'queue_workers' => 2,
         'queue_worker_lifetime' => 60, // time in seconds, default to 1hr
@@ -83,8 +83,10 @@ return (object)[
             'db'    => 'drencrom_test'
         ]
     ],
-
-    // mapping of 'mime/type' => 'ext' of any/all mime types you wish a client to be able to upload
+    // mapping of 'mime/type' => 'ext' of any/all mime types you wish a client to be able to upload. Mimes must be added
+    // here before the application will even attempt to run validation on them, meaning if you define within a form data
+    // validator, a mime that's not included there, it will still fail because you did not first tell the application
+    // that it is a potentially submittable mime type
     'allowed_file_upload_mimes' => [
         'image/jpeg' => 'jpg',
         'image/png' => 'png',
