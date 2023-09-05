@@ -3,8 +3,8 @@
 namespace App\Jobs;
 
 use Dren\Job;
-use Dren\Jobs\SequentialJob;
-use Dren\Logger;
+use Dren\Jobs\ExecutionTypes\SequentialJob;
+
 
 class TestJob extends Job
 {

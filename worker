@@ -42,15 +42,14 @@ while (true)
 
             $job = new $className($jobData);
 
+            // we delete the job from the jobQueue now, because at this point it will show up as a failed execution
+            // in the job_executions table if something were to go awry
+            $jobDao->deleteJobQueue($j->id);
+
             if($job->isConcurrent())
                 $jobExecutor->runConcurrent($job);
             else
                 $jobExecutor->runSequential($job);
-
-            // TODO: remove record form job_queue, BUT we just realized that we need to make modifications so we
-            // include data in the job_executions table whenever a job fails that contained data
-            $jobDao->deleteJobQueue($j->id);
-
         }
     }
     catch(Exception $e)

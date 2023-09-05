@@ -11,6 +11,7 @@
 return [
     'app_name' => 'test',
     'display_errors' => true,
+    'base_url' => 'https://drencrom-test/',
     // 32 byte or more cryptographically secure secret that is not known to anyone but your application
     // For example, you could use the following in an external script to generate your token:
     // bin2hex(random_bytes(32));
