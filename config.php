@@ -57,11 +57,8 @@ return [
         // Whether to run the session_id garbage collector or not. If you want to handle session garbage collection via
         // external means such as a background job, set this to false, and the rest of the gc parameters will be ignored
         'use_garbage_collector' => true,
-        // These properties work together whenever 'use_garbage_collector' is set to true. They are used to determine
-        // the approximate percentage chance that the request runs the session garbage collector. With the default
-        // settings of 1/100, there is approximately 1% chance of gc occurring
-        'gc_probability' => 1,
-        'gc_divisor' => 100,
+        // This property is utilized when 'use_garbage_collector' is set to true.
+        'gc_probability' => 1, // percentage 0-100
         // Common cookie values to set for security reasons
         'cookie_secure' => true,
         'cookie_httponly' => true,
