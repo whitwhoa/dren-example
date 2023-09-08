@@ -1,14 +1,13 @@
 <?php
 
 
-namespace App\FormDataValidators;
+namespace App\Http\FormDataValidators;
 
 
 
-use App\DAOs\UserDAO;
 use App\Services\UserService;
-use Dren\Request;
 use Dren\FormDataValidator;
+use Dren\Request;
 use Dren\SessionManager;
 
 

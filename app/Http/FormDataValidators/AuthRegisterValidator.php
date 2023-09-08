@@ -1,11 +1,10 @@
 <?php
 
 
-namespace App\FormDataValidators;
+namespace App\Http\FormDataValidators;
 
 
 use Dren\FormDataValidator;
-
 
 
 class AuthRegisterValidator extends FormDataValidator

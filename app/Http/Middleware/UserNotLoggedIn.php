@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Middleware;
+namespace App\Http\Middleware;
 
 
 use Dren\Middleware;
 use Dren\Response;
 
 
-class UserLoggedIn extends Middleware
+class UserNotLoggedIn extends Middleware
 {
 
     /**
@@ -21,7 +21,7 @@ class UserLoggedIn extends Middleware
     public function handle() : ?Response
     {
         // User is logged in, so we need to return a redirect response
-        if(!$this->sessionManager->isAuthenticated())
+        if($this->sessionManager->isAuthenticated())
             return (new Response())->redirect('/');
 
         return null;

@@ -1,14 +1,13 @@
 <?php
 
 
-namespace App\Controllers;
+namespace App\Http\Controllers;
 
 
 use App\DAOs\UserDAO;
 use App\Services\UserService;
 use Dren\App;
 use Dren\Controller;
-
 use Dren\RememberIdManager;
 use Dren\Response;
 use Exception;

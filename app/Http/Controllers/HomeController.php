@@ -1,16 +1,14 @@
 <?php
 
 
-namespace App\Controllers;
+namespace App\Http\Controllers;
 
 
 
 use App\DAOs\UserDAO;
-
 use Dren\App;
 use Dren\Controller;
 use Dren\Response;
-use Exception;
 
 
 class HomeController extends Controller
