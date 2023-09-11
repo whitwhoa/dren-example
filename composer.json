@@ -1,12 +1,12 @@
 {
-    "name": "whitwhoa/drencrom-test",
-    "description": "Test suite for DrencromPHP framework",
+    "name": "whitwhoa/dren-example",
+    "description": "Example project for DrenPHP framework",
     "license": "MIT",
     "type": "project",
 	"repositories": [
 		{
 			"type": "path",
-			"url": "/development/drencrom"
+			"url": "/development/dren-framework"
 		}
 	],
     "require": {
