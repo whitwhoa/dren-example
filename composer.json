@@ -1,17 +1,17 @@
 {
     "name": "whitwhoa/dren-example",
-    "description": "Example project for DrenPHP framework",
+    "description": "Example project for Dren PHP framework",
     "license": "MIT",
     "type": "project",
 	"repositories": [
 		{
 			"type": "path",
-			"url": "/development/dren-framework"
+			"url": "/development/drenphp"
 		}
 	],
     "require": {
         "php": ">=8.1.0",
-		"whitwhoa/drencrom": "@dev"
+		"whitwhoa/drenphp": "@dev"
     },
     "require-dev": {},
     "autoload": {

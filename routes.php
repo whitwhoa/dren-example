@@ -18,31 +18,31 @@
  */
 
 // Authentication routes
-Dren\Router::web()
-    ->get('/auth/register')
-    ->controller('AuthController')
-    ->method('register')
-    ->middleware(['UserNotLoggedIn']);
+Dren\Router::middlewareGroup(['UserNotLoggedIn'], function(){
 
-Dren\Router::web()
-    ->post('/auth/register/save')
-    ->controller('AuthController')
-    ->method('registerSave')
-    ->middleware(['UserNotLoggedIn'])
-    ->formDataValidator('AuthRegisterValidator');
+    Dren\Router::web()
+        ->get('/auth/register')
+        ->controller('AuthController')
+        ->method('register');
 
-Dren\Router::web()
-    ->get('/auth/login')
-    ->controller('AuthController')
-    ->method('login')
-    ->middleware(['UserNotLoggedIn']);
+    Dren\Router::web()
+        ->post('/auth/register/save')
+        ->controller('AuthController')
+        ->method('registerSave')
+        ->formDataValidator('AuthRegisterValidator');
 
-Dren\Router::web()
-    ->post('/auth/login/save')
-    ->controller('AuthController')
-    ->method('loginSave')
-    ->middleware(['UserNotLoggedIn'])
-    ->formDataValidator('AuthLoginValidator');
+    Dren\Router::web()
+        ->get('/auth/login')
+        ->controller('AuthController')
+        ->method('login');
+
+    Dren\Router::web()
+        ->post('/auth/login/save')
+        ->controller('AuthController')
+        ->method('loginSave')
+        ->formDataValidator('AuthLoginValidator');
+
+});
 
 Dren\Router::web()
     ->get('/auth/logout')
